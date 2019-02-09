@@ -1,4 +1,5 @@
 ﻿using HearMe.Controllers;
+using Id3;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -23,6 +24,17 @@ namespace HearMe
             }
         }
 
+        private string _songTitle;
+        public string SongTitle
+        {
+            get { return _songTitle; }
+            set
+            {
+                _songTitle = value;
+                OnPropertyChanged("SongTitle");
+            }
+        }
+
         private double _songPosition;
         public double SongPosition
         {
@@ -41,6 +53,7 @@ namespace HearMe
             _controller = new PlayerController(this);
             songTime.DataContext = this;
             seekBar.DataContext = this;
+            songTitle.DataContext = this;
         }
 
         public void PlayFile(object sender, DragEventArgs e)
@@ -50,12 +63,23 @@ namespace HearMe
                 string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
                 _controller.PlayFile(@droppedFile[0]);
 
+                UpdateSongInformationDisplay(@droppedFile[0]);
+
                 seekBar.Maximum = _controller.Length;
 
                 var timer = new System.Timers.Timer();
                 timer.Interval = 300;
                 timer.Elapsed += UpdateSeekPosition;
                 timer.Start();
+            }
+        }
+
+        public void UpdateSongInformationDisplay(string musicFile)
+        {
+            using (var mp3 = new Mp3(musicFile))
+            {
+                Id3Tag tag = mp3.GetTag(Id3TagFamily.Version2X);
+                SongTitle = tag.Artists.ToString().Replace("\0", "") + "-" + tag.Title.ToString().Replace("\0", "");
             }
         }
 

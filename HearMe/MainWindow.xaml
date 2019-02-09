@@ -12,6 +12,7 @@
         <Slider x:Name="seekBar" Value="{Binding SongPosition}" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" Width="272" ValueChanged="GoToPosition"/>
         <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="9,75,0,0" Orientation="Vertical" Height="80" ValueChanged="SetVolume"/>
         <Label x:Name="songTime" Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Margin="0,2,15,0"/>
+        <Label x:Name="songTitle" Content="{Binding SongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,-2,0,0"/>
 
     </Grid>
 </Window>
