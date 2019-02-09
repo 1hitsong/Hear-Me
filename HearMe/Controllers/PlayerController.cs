@@ -41,6 +41,21 @@ namespace HearMe.Controllers
             PlayerView = view;
         }
 
+        public void PlayFile(string fileLocation)
+        {
+
+            if (outputDevice != null)
+                outputDevice.Dispose();
+
+            outputDevice = new WaveOutEvent();
+
+
+            audioFile = new AudioFileReader(@fileLocation);
+            outputDevice.Init(audioFile);
+
+            outputDevice.Play();
+        }
+
         public void Play()
         {
             if (outputDevice == null)

@@ -43,6 +43,22 @@ namespace HearMe
             seekBar.DataContext = this;
         }
 
+        public void PlayFile(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
+                _controller.PlayFile(@droppedFile[0]);
+
+                seekBar.Maximum = _controller.Length;
+
+                var timer = new System.Timers.Timer();
+                timer.Interval = 300;
+                timer.Elapsed += UpdateSeekPosition;
+                timer.Start();
+            }
+        }
+
         private void UpdateSeekPosition(object sender, System.Timers.ElapsedEventArgs e)
         {
             this.Dispatcher.Invoke(() =>

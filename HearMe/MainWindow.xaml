@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:HearMe"
         mc:Ignorable="d"
         Title="MainWindow" Height="200" Width="300">
-    <Grid>
+    <Grid Background="White" Drop="PlayFile" AllowDrop="True">
         <Button x:Name="stopButton" Content="Stop" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Stop" Margin="160,70,0,0"/>
         <Button x:Name="playButton" Content="Play" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Margin="60,70,0,0"/>
         <Slider x:Name="seekBar" Value="{Binding SongPosition}" HorizontalAlignment="Left" Margin="10,22,0,0" VerticalAlignment="Top" Width="272" ValueChanged="GoToPosition"/>
