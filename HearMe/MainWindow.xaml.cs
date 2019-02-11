@@ -1,6 +1,8 @@
 ﻿using HearMe.Controllers;
 using Id3;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 
@@ -35,6 +37,17 @@ namespace HearMe
             }
         }
 
+        private ObservableCollection<Song> _playlist;
+        public ObservableCollection<Song> Playlist
+        {
+            get { return _playlist; }
+            set
+            {
+                _playlist = value;
+                OnPropertyChanged("Playlist");
+            }
+        }
+
         private double _songPosition;
         public double SongPosition
         {
@@ -50,10 +63,13 @@ namespace HearMe
         {
             InitializeComponent();
 
+            Playlist = new ObservableCollection<Song>();
+
             _controller = new PlayerController(this);
             songTime.DataContext = this;
             seekBar.DataContext = this;
             songTitle.DataContext = this;
+            playlist.DataContext = this;
         }
 
         public void PlayFile(object sender, DragEventArgs e)
@@ -71,6 +87,48 @@ namespace HearMe
                 timer.Interval = 300;
                 timer.Elapsed += UpdateSeekPosition;
                 timer.Start();
+            }
+        }
+
+        public void PlayFile(string songFilename)
+        {
+            _controller.PlayFile(songFilename);
+
+            UpdateSongInformationDisplay(songFilename);
+
+            seekBar.Maximum = _controller.Length;
+
+            var timer = new System.Timers.Timer();
+            timer.Interval = 300;
+            timer.Elapsed += UpdateSeekPosition;
+            timer.Start();
+            
+        }
+
+        private void PlaySongFromPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Song selectedSong = (Song)playlist.SelectedItem;
+            PlayFile(selectedSong.FileName);
+        }
+
+        public void AddToPlaylist(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                using (var mp3 = new Mp3(@droppedFile[0]))
+                {
+                    Id3Tag tag = mp3.GetTag(Id3TagFamily.Version2X);
+
+                    Song addedSong = new Song{
+                        FileName = @droppedFile[0],
+                        Title = tag.Title.ToString().Replace("\0", ""),
+                        Artist = tag.Artists.ToString().Replace("\0", "")
+                    };
+
+                    Playlist.Add(addedSong);
+                }
             }
         }
 
@@ -144,6 +202,5 @@ namespace HearMe
             }
         }
         #endregion
-
     }
 }
