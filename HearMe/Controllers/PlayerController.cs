@@ -1,5 +1,6 @@
 ﻿using HearMe.Models;
 using NAudio.Wave;
+using System;
 
 namespace HearMe.Controllers
 {
@@ -48,12 +49,20 @@ namespace HearMe.Controllers
                 outputDevice.Dispose();
 
             outputDevice = new WaveOutEvent();
-
-
             audioFile = new AudioFileReader(@fileLocation);
-            outputDevice.Init(audioFile);
 
+            outputDevice.Init(audioFile);
             outputDevice.Play();
+
+            outputDevice.PlaybackStopped += PlaybackDevicePlaybackStopped;
+        }
+
+        void PlaybackDevicePlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            if (SongPosition == Length)
+            {
+                PlayerView.Next(null, null);
+            }
         }
 
         public void Play()

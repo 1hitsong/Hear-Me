@@ -144,8 +144,8 @@ namespace HearMe
 
                     Song addedSong = new Song{
                         FileName = @droppedFile[0],
-                        Title = tag.Title.ToString().Replace("\0", ""),
-                        Artist = tag.Artists.ToString().Replace("\0", "")
+                        Title = tag == null ? "Unknown Track" : tag.Title.ToString().Replace("\0", ""),
+                        Artist = tag == null ? "Unknown Artist" : tag.Artists.ToString().Replace("\0", "")
                     };
 
                     Playlist.Add(addedSong);
@@ -158,7 +158,7 @@ namespace HearMe
             using (var mp3 = new Mp3(musicFile))
             {
                 Id3Tag tag = mp3.GetTag(Id3TagFamily.Version2X);
-                SongTitle = tag.Artists.ToString().Replace("\0", "") + "-" + tag.Title.ToString().Replace("\0", "");
+                SongTitle = tag == null ? "Unknown Artist - Unknown Track" : tag.Artists.ToString().Replace("\0", "") + "-" + tag.Title.ToString().Replace("\0", "");
             }
         }
 
