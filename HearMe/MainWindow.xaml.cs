@@ -102,7 +102,28 @@ namespace HearMe
             timer.Interval = 300;
             timer.Elapsed += UpdateSeekPosition;
             timer.Start();
-            
+        }
+
+        public void Previous(object sender, RoutedEventArgs e)
+        {
+            if (playlist.SelectedIndex == 0) return;
+
+            _controller.Stop();
+            playlist.SelectedIndex -= 1;
+
+            Song selectedSong = (Song)playlist.SelectedItem;
+            PlayFile(selectedSong.FileName);
+        }
+
+        public void Next(object sender, RoutedEventArgs e)
+        {
+            if (playlist.SelectedIndex + 1 == Playlist.Count) return;
+
+            _controller.Stop();
+            playlist.SelectedIndex += 1;
+
+            Song selectedSong = (Song)playlist.SelectedItem;
+            PlayFile(selectedSong.FileName);
         }
 
         private void PlaySongFromPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
