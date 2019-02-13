@@ -1,6 +1,7 @@
 ﻿using HearMe.Models;
 using NAudio.Wave;
 using System;
+using System.IO;
 
 namespace HearMe.Controllers
 {
@@ -45,10 +46,16 @@ namespace HearMe.Controllers
         public void PlayFile(string fileLocation)
         {
 
+            if (!File.Exists(fileLocation))
+            {
+                return;
+            }
+
             if (outputDevice != null)
                 outputDevice.Dispose();
 
             outputDevice = new WaveOutEvent();
+
             audioFile = new AudioFileReader(@fileLocation);
 
             outputDevice.Init(audioFile);

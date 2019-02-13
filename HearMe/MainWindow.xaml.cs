@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 
 namespace HearMe
@@ -92,6 +93,11 @@ namespace HearMe
 
         public void PlayFile(string songFilename)
         {
+            if (!File.Exists(@songFilename))
+            {
+                return;
+            }
+
             _controller.PlayFile(songFilename);
 
             UpdateSongInformationDisplay(songFilename);
