@@ -5,27 +5,27 @@ using System.IO;
 
 namespace HearMe.Controllers
 {
-    class PlayerController : IPlayer
+    class PlayerController : IPlayer, IDisposable
     {
         MainWindow PlayerView;
 
-        private WaveOutEvent outputDevice;
+        private IWavePlayer outputDevice;
         private AudioFileReader audioFile;
 
         public float Volume { get; set; }
-        public double SongPosition {
+        public long SongPosition {
             get { return audioFile.Position; }
             set { }
         }
 
-        public string CurrentTime
+        public TimeSpan CurrentTime
         {
-            get { return audioFile.CurrentTime.ToString("mm\\:ss"); }
+            get { return audioFile.CurrentTime; }
         }
 
-        public string TotalTime
+        public TimeSpan TotalTime
         {
-            get { return audioFile.TotalTime.ToString("mm\\:ss"); }
+            get { return audioFile.TotalTime; }
         }
 
         public long Length
@@ -51,11 +51,12 @@ namespace HearMe.Controllers
                 return;
             }
 
-            if (outputDevice != null)
-                outputDevice.Dispose();
+            if (outputDevice != null || audioFile != null)
+            {
+                Dispose();
+            }
 
-            outputDevice = new WaveOutEvent();
-
+            outputDevice = new WaveOut { DesiredLatency = 200 };
             audioFile = new AudioFileReader(@fileLocation);
 
             outputDevice.Init(audioFile);
@@ -98,9 +99,20 @@ namespace HearMe.Controllers
             audioFile.Volume = volumeLevel;
         }
 
-        public void SetPosition(long newPosition)
+        public void SetPosition(TimeSpan newPosition)
         {
-            audioFile.Position = newPosition;
+            audioFile.CurrentTime = newPosition;
+        }
+
+        public void Dispose()
+        {
+            outputDevice?.Dispose();
+            outputDevice = null;
+
+            audioFile?.Dispose();
+            audioFile = null;
+
+            SongPosition = 0;
         }
     }
 }

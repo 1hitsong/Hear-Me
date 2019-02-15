@@ -11,10 +11,11 @@
         <Button x:Name="stopButton" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Stop" Margin="160,98,0,0"/>
         <Button x:Name="playButton" Content="&#9199;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Margin="60,98,0,0"/>
         <Button x:Name="nextButton" Content="&#9197;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Next" Margin="250,98,0,0"/>
-        <Slider x:Name="seekBar" Value="{Binding SongPosition}" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="170" ValueChanged="GoToPosition"/>
+        <Slider x:Name="seekBar" Value="{Binding SongPosition}" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Width="170" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="GoToPosition"/>
         <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="202,50,0,0" ValueChanged="SetVolume" Width="80"/>
         <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Margin="0,65,120,0" Foreground="White"/>
         <Label x:Name="songTitle" Content="{Binding SongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,26,0,0" Foreground="White"/>
+        <Label x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="245,145,0,0" Foreground="White" Height="25" MouseDown="ClearPlaylist"/>
         <ListBox Background="#e7e7e7" x:Name="playlist" MouseDoubleClick="PlaySongFromPlaylist" SelectedValuePath="Filename" ItemsSource="{Binding Playlist}" HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="272" Margin="10,175,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>

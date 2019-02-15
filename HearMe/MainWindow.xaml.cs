@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace HearMe
 {
@@ -75,20 +78,23 @@ namespace HearMe
 
         public void PlayFile(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
-                _controller.PlayFile(@droppedFile[0]);
-
-                UpdateSongInformationDisplay(@droppedFile[0]);
-
-                seekBar.Maximum = _controller.Length;
-
-                var timer = new System.Timers.Timer();
-                timer.Interval = 300;
-                timer.Elapsed += UpdateSeekPosition;
-                timer.Start();
+                return;
             }
+
+            string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
+            _controller.PlayFile(@droppedFile[0]);
+
+            UpdateSongInformationDisplay(@droppedFile[0]);
+
+            seekBar.Minimum = 0;
+            seekBar.Maximum = _controller.TotalTime.TotalSeconds;
+
+            var timer = new System.Timers.Timer();
+            timer.Interval = 300;
+            timer.Elapsed += UpdateSeekPosition;
+            timer.Start();
         }
 
         public void PlayFile(string songFilename)
@@ -102,7 +108,8 @@ namespace HearMe
 
             UpdateSongInformationDisplay(songFilename);
 
-            seekBar.Maximum = _controller.Length;
+            seekBar.Minimum = 0;
+            seekBar.Maximum = _controller.TotalTime.TotalSeconds;
 
             var timer = new System.Timers.Timer();
             timer.Interval = 300;
@@ -138,32 +145,42 @@ namespace HearMe
             PlayFile(selectedSong.FileName);
         }
 
+        private void ClearPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Playlist.Clear();
+        }
+
         public void AddToPlaylist(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-                using (var mp3 = new Mp3(@droppedFile[0]))
+                foreach (string droppedFile in (string[])e.Data.GetData(DataFormats.FileDrop))
                 {
-                    Id3Tag tag = mp3.GetTag(Id3TagFamily.Version2X);
+                    using (var mp3 = new Mp3(@droppedFile))
+                    {
+                        IEnumerable<Id3Tag> tags = mp3.GetAllTags();
+                        Id3Tag tag = tags.FirstOrDefault();
 
-                    Song addedSong = new Song{
-                        FileName = @droppedFile[0],
-                        Title = tag == null ? "Unknown Track" : tag.Title.ToString().Replace("\0", ""),
-                        Artist = tag == null ? "Unknown Artist" : tag.Artists.ToString().Replace("\0", "")
-                    };
+                        Song addedSong = new Song
+                        {
+                            FileName = @droppedFile,
+                            Title = tag == null ? "Unknown Track" : tag.Title.ToString().Replace("\0", ""),
+                            Artist = tag == null ? "Unknown Artist" : tag.Artists.ToString().Replace("\0", "")
+                        };
 
-                    Playlist.Add(addedSong);
+                        Playlist.Add(addedSong);
+                    }
                 }
             }
         }
 
         public void UpdateSongInformationDisplay(string musicFile)
         {
+            SongPosition = 0;
             using (var mp3 = new Mp3(musicFile))
             {
-                Id3Tag tag = mp3.GetTag(Id3TagFamily.Version2X);
+                IEnumerable<Id3Tag> tags = mp3.GetAllTags();
+                Id3Tag tag = tags.FirstOrDefault();
                 SongTitle = tag == null ? "Unknown Artist - Unknown Track" : tag.Artists.ToString().Replace("\0", "") + "-" + tag.Title.ToString().Replace("\0", "");
             }
         }
@@ -172,14 +189,16 @@ namespace HearMe
         {
             this.Dispatcher.Invoke(() =>
             {
-                SongPosition = _controller.SongPosition - (_controller.SongFormat.AverageBytesPerSecond * 2.5);
+                if (!dragStarted)
+                    SongPosition = _controller.CurrentTime.TotalSeconds;
+
                 UpdateSongInformation();
             });
         }
 
         private void UpdateSongInformation()
         {
-            DisplayText = _controller.CurrentTime + " / " + _controller.TotalTime;
+            DisplayText = _controller.CurrentTime.ToString("mm\\:ss") + " / " + _controller.TotalTime.ToString("mm\\:ss");
         }
 
         private void SetVolume(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -190,7 +209,7 @@ namespace HearMe
         private void Play(object sender, RoutedEventArgs e)
         {
             _controller.Play();
-            seekBar.Maximum = _controller.Length;
+            seekBar.Maximum = _controller.TotalTime.TotalSeconds;
 
             var timer = new System.Timers.Timer();
             timer.Interval = 300;
@@ -203,19 +222,31 @@ namespace HearMe
             _controller.Stop();
         }
 
-        private void GoToPosition(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private bool dragStarted = false;
+
+        private void Slider_DragStarted(object sender, DragStartedEventArgs e)
         {
+            dragStarted = true;
+        }
+
+        private void GoToPosition(object sender, DragCompletedEventArgs e)
+        {
+            if (!dragStarted) return;
+
+            /*
             long newPos = (long)seekBar.Value + (long)(_controller.SongFormat.AverageBytesPerSecond * 2.5);
             // Force it to align to a block boundary
             if ((newPos % _controller.SongFormat.BlockAlign) != 0)
                 newPos -= newPos % _controller.SongFormat.BlockAlign;
             // Force new position into valid range
             newPos = Math.Max(0, Math.Min(_controller.Length, newPos));
+            */
+
             // set position
-            _controller.SetPosition(newPos);
+            _controller.SetPosition(new TimeSpan(0, (int)(Math.Floor(seekBar.Value / 60)), (int)(Math.Floor(seekBar.Value % 60))));            
 
-            UpdateSongInformation();
-
+            dragStarted = false;
+            
         }
 
         #region INotifyPropertyChanged Implementation
