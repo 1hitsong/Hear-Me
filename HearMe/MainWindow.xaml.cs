@@ -159,16 +159,17 @@ namespace HearMe
             {
                 foreach (string droppedFile in (string[])e.Data.GetData(DataFormats.FileDrop))
                 {
-                    TagFile tags = TagFile.Create(@droppedFile);
-
-                    Song addedSong = new Song
+                    using (TagFile tags = TagFile.Create(@droppedFile))
                     {
-                        FileName = @droppedFile,
-                        Title = tags == null ? "Unknown Track" : tags.Tag.Title.Replace("\0", ""),
-                        Artist = tags == null ? "Unknown Artist" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "")
-                    };
+                        Song addedSong = new Song
+                        {
+                            FileName = @droppedFile,
+                            Title = tags == null ? "Unknown Track" : tags.Tag.Title.Replace("\0", ""),
+                            Artist = tags == null ? "Unknown Artist" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "")
+                        };
 
-                    Playlist.Add(addedSong);
+                        Playlist.Add(addedSong);
+                    }
                 }
             }
         }
@@ -176,9 +177,12 @@ namespace HearMe
         public void UpdateSongInformationDisplay(string musicFile)
         {
             SongPosition = 0;
-            TagFile tags = TagFile.Create(musicFile);
 
-            SongTitle = tags == null ? "Unknown Artist - Unknown Track" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "") + "-" + tags.Tag.Title.Replace("\0", "");
+            using (TagFile tags = TagFile.Create(musicFile))
+            {
+                SongTitle = tags == null ? "Unknown Artist - Unknown Track" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "") + "-" + tags.Tag.Title.Replace("\0", "");
+                this.Title = SongTitle;
+            }
         }
 
         private void UpdateSeekPosition(object sender, System.Timers.ElapsedEventArgs e)
