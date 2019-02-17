@@ -1,5 +1,4 @@
 ﻿using HearMe.Controllers;
-using Id3;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +8,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using TagLib;
+using TagFile = TagLib.File;
 
 namespace HearMe
 {
@@ -101,7 +102,7 @@ namespace HearMe
 
         public void PlayFile(string songFilename)
         {
-            if (!File.Exists(@songFilename))
+            if (!System.IO.File.Exists(@songFilename))
             {
                 return;
             }
@@ -158,20 +159,16 @@ namespace HearMe
             {
                 foreach (string droppedFile in (string[])e.Data.GetData(DataFormats.FileDrop))
                 {
-                    using (var mp3 = new Mp3(@droppedFile))
+                    TagFile tags = TagFile.Create(@droppedFile);
+
+                    Song addedSong = new Song
                     {
-                        IEnumerable<Id3Tag> tags = mp3.GetAllTags();
-                        Id3Tag tag = tags.FirstOrDefault();
+                        FileName = @droppedFile,
+                        Title = tags == null ? "Unknown Track" : tags.Tag.Title.Replace("\0", ""),
+                        Artist = tags == null ? "Unknown Artist" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "")
+                    };
 
-                        Song addedSong = new Song
-                        {
-                            FileName = @droppedFile,
-                            Title = tag == null ? "Unknown Track" : tag.Title.ToString().Replace("\0", ""),
-                            Artist = tag == null ? "Unknown Artist" : tag.Artists.ToString().Replace("\0", "")
-                        };
-
-                        Playlist.Add(addedSong);
-                    }
+                    Playlist.Add(addedSong);
                 }
             }
         }
@@ -179,12 +176,9 @@ namespace HearMe
         public void UpdateSongInformationDisplay(string musicFile)
         {
             SongPosition = 0;
-            using (var mp3 = new Mp3(musicFile))
-            {
-                IEnumerable<Id3Tag> tags = mp3.GetAllTags();
-                Id3Tag tag = tags.FirstOrDefault();
-                SongTitle = tag == null ? "Unknown Artist - Unknown Track" : tag.Artists.ToString().Replace("\0", "") + "-" + tag.Title.ToString().Replace("\0", "");
-            }
+            TagFile tags = TagFile.Create(musicFile);
+
+            SongTitle = tags == null ? "Unknown Artist - Unknown Track" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "") + "-" + tags.Tag.Title.Replace("\0", "");
         }
 
         private void UpdateSeekPosition(object sender, System.Timers.ElapsedEventArgs e)

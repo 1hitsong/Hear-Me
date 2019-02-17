@@ -1,16 +1,19 @@
 ﻿using HearMe.Models;
-using NAudio.Wave;
 using System;
 using System.IO;
 
+using CSCore;
+using CSCore.SoundOut;
+using CSCore.Codecs.MP3;
+
 namespace HearMe.Controllers
 {
-    class PlayerController : IPlayer, IDisposable
+    class PlayerController : IDisposable
     {
         MainWindow PlayerView;
 
-        private IWavePlayer outputDevice;
-        private AudioFileReader audioFile;
+        private ISoundOut outputDevice;
+        private IWaveSource audioFile;
 
         public float Volume { get; set; }
         public long SongPosition {
@@ -20,12 +23,12 @@ namespace HearMe.Controllers
 
         public TimeSpan CurrentTime
         {
-            get { return audioFile.CurrentTime; }
+            get { return audioFile.GetPosition(); }
         }
 
         public TimeSpan TotalTime
         {
-            get { return audioFile.TotalTime; }
+            get { return audioFile.GetLength(); }
         }
 
         public long Length
@@ -56,15 +59,16 @@ namespace HearMe.Controllers
                 Dispose();
             }
 
-            outputDevice = new WaveOut { DesiredLatency = 200 };
-            audioFile = new AudioFileReader(@fileLocation);
+            //Contains the sound to play
+            outputDevice = GetSoundOut();
+            audioFile = new DmoMp3Decoder(@fileLocation);
 
-            audioFile.Volume = Volume;
-
-            outputDevice.Init(audioFile);
+            outputDevice.Initialize(audioFile);
             outputDevice.Play();
 
-            outputDevice.PlaybackStopped += PlaybackDevicePlaybackStopped;
+            outputDevice.Volume = Volume;
+
+            outputDevice.Stopped += PlaybackDevicePlaybackStopped;
         }
 
         void PlaybackDevicePlaybackStopped(object sender, StoppedEventArgs e)
@@ -82,9 +86,17 @@ namespace HearMe.Controllers
                 return;
             }
 
-            audioFile.Volume = Volume;
+            outputDevice.Volume = Volume;
 
             outputDevice.Play();
+        }
+
+        private ISoundOut GetSoundOut()
+        {
+            if (WasapiOut.IsSupportedOnCurrentPlatform)
+                return new WasapiOut();
+            else
+                return new DirectSoundOut();
         }
 
         public void Stop()
@@ -96,13 +108,13 @@ namespace HearMe.Controllers
         {
             Volume = volumeLevel;
 
-            if (audioFile != null)
-                audioFile.Volume = Volume;
+            if (outputDevice != null)
+                outputDevice.Volume = Volume;
         }
 
         public void SetPosition(TimeSpan newPosition)
         {
-            audioFile.CurrentTime = newPosition;
+            audioFile.SetPosition(newPosition);
         }
 
         public void Dispose()

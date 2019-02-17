@@ -1,5 +1,4 @@
-﻿using NAudio.Wave;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace HearMe.Models
@@ -11,7 +10,6 @@ namespace HearMe.Models
         TimeSpan CurrentTime { get; }
         TimeSpan TotalTime { get; }
         long Length { get; }
-        WaveFormat SongFormat { get; }
 
         void Play();
         void Stop();
