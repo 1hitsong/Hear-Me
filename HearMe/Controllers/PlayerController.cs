@@ -59,6 +59,8 @@ namespace HearMe.Controllers
             outputDevice = new WaveOut { DesiredLatency = 200 };
             audioFile = new AudioFileReader(@fileLocation);
 
+            audioFile.Volume = Volume;
+
             outputDevice.Init(audioFile);
             outputDevice.Play();
 
@@ -75,16 +77,12 @@ namespace HearMe.Controllers
 
         public void Play()
         {
-            if (outputDevice == null)
+            if (outputDevice == null || audioFile == null)
             {
-                outputDevice = new WaveOutEvent();
+                return;
             }
 
-            if (audioFile == null)
-            {
-                audioFile = new AudioFileReader(@"sample.mp3");
-                outputDevice.Init(audioFile);
-            }
+            audioFile.Volume = Volume;
 
             outputDevice.Play();
         }
@@ -96,7 +94,10 @@ namespace HearMe.Controllers
 
         public void SetVolume(float volumeLevel)
         {
-            audioFile.Volume = volumeLevel;
+            Volume = volumeLevel;
+
+            if (audioFile != null)
+                audioFile.Volume = Volume;
         }
 
         public void SetPosition(TimeSpan newPosition)

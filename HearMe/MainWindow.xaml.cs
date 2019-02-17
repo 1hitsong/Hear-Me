@@ -65,11 +65,13 @@ namespace HearMe
 
         public MainWindow()
         {
+            _controller = new PlayerController(this);
+
             InitializeComponent();
 
             Playlist = new ObservableCollection<Song>();
 
-            _controller = new PlayerController(this);
+            
             songTime.DataContext = this;
             seekBar.DataContext = this;
             songTitle.DataContext = this;
