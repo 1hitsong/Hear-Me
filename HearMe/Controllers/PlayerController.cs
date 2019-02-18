@@ -101,7 +101,8 @@ namespace HearMe.Controllers
 
         public void Stop()
         {
-            outputDevice.Stop();
+            if (outputDevice != null)
+                outputDevice.Stop();
         }
 
         public void SetVolume(float volumeLevel)
