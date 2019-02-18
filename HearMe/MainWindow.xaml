@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HearMe"
         mc:Ignorable="d"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseDown="Window_MouseDown"
+        Background="White"
+        BorderBrush="LightGray" BorderThickness="1"
         Title="Hear Me" Height="400" Width="300">
     <Grid Background="#202020" Drop="AddToPlaylist" AllowDrop="True">
+        <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="Window_Close" Canvas.Left="180" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#f7f7f7" />
         <Button x:Name="previousButton" Content="&#9198;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Previous" Margin="20,98,0,0"/>
         <Button x:Name="stopButton" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Stop" Margin="160,98,0,0"/>
         <Button x:Name="playButton" Content="&#9199;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Margin="60,98,0,0"/>

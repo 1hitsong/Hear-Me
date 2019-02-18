@@ -113,6 +113,17 @@ namespace HearMe
             timer.Start();
         }*/
 
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        private void Window_Close(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         public void PlayFile(string songFilename)
         {
             if (!System.IO.File.Exists(@songFilename))
