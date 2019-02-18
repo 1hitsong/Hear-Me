@@ -17,23 +17,23 @@ namespace HearMe.Controllers
 
         public float Volume { get; set; }
         public long SongPosition {
-            get { return audioFile.Position; }
+            get { return (audioFile != null) ? audioFile.Position : 0; }
             set { }
         }
 
         public TimeSpan CurrentTime
         {
-            get { return audioFile.GetPosition(); }
+            get { return (audioFile != null) ? audioFile.GetPosition() : TimeSpan.Zero; }
         }
 
         public TimeSpan TotalTime
         {
-            get { return audioFile.GetLength(); }
+            get { return (audioFile != null) ? audioFile.GetLength() : TimeSpan.Zero; }
         }
 
         public long Length
         {
-            get { return audioFile.Length; }
+            get { return (audioFile != null) ? audioFile.Length : 0; }
         }
 
         public WaveFormat SongFormat

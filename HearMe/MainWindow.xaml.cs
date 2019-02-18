@@ -19,6 +19,7 @@ namespace HearMe
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private PlayerController _controller;
+        private System.Timers.Timer _timer;
 
         private string _displayText;
         public string DisplayText
@@ -72,14 +73,26 @@ namespace HearMe
 
             Playlist = new ObservableCollection<Song>();
 
-            
+            _timer = new System.Timers.Timer();
+            _timer.Interval = 300;
+            _timer.Elapsed += UpdateSeekPosition;
+
             songTime.DataContext = this;
             seekBar.DataContext = this;
             songTitle.DataContext = this;
             playlist.DataContext = this;
+
+            Closing += OnWindowClosing;
         }
 
-        public void PlayFile(object sender, DragEventArgs e)
+        public void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            _controller.Stop();
+            _timer.Dispose();
+            _controller.Dispose();
+        }
+
+        /*public void PlayFile(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -98,7 +111,7 @@ namespace HearMe
             timer.Interval = 300;
             timer.Elapsed += UpdateSeekPosition;
             timer.Start();
-        }
+        }*/
 
         public void PlayFile(string songFilename)
         {
@@ -114,10 +127,7 @@ namespace HearMe
             seekBar.Minimum = 0;
             seekBar.Maximum = _controller.TotalTime.TotalSeconds;
 
-            var timer = new System.Timers.Timer();
-            timer.Interval = 300;
-            timer.Elapsed += UpdateSeekPosition;
-            timer.Start();
+            _timer.Start();
         }
 
         public void Previous(object sender, RoutedEventArgs e)
@@ -211,10 +221,7 @@ namespace HearMe
             _controller.Play();
             seekBar.Maximum = _controller.TotalTime.TotalSeconds;
 
-            var timer = new System.Timers.Timer();
-            timer.Interval = 300;
-            timer.Elapsed += UpdateSeekPosition;
-            timer.Start();
+            _timer.Start();
         }
 
         private void Stop(object sender, RoutedEventArgs e)
