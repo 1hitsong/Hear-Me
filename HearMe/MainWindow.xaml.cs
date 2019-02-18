@@ -92,27 +92,6 @@ namespace HearMe
             _controller.Dispose();
         }
 
-        /*public void PlayFile(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                return;
-            }
-
-            string[] droppedFile = (string[])e.Data.GetData(DataFormats.FileDrop);
-            _controller.PlayFile(@droppedFile[0]);
-
-            UpdateSongInformationDisplay(@droppedFile[0]);
-
-            seekBar.Minimum = 0;
-            seekBar.Maximum = _controller.TotalTime.TotalSeconds;
-
-            var timer = new System.Timers.Timer();
-            timer.Interval = 300;
-            timer.Elapsed += UpdateSeekPosition;
-            timer.Start();
-        }*/
-
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
