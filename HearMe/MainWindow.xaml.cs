@@ -169,6 +169,11 @@ namespace HearMe
             {
                 foreach (string droppedFile in (string[])e.Data.GetData(DataFormats.FileDrop))
                 {
+                    if (System.IO.Path.GetExtension(droppedFile) != ".mp3")
+                    {
+                        continue;
+                    }
+
                     using (TagFile tags = TagFile.Create(@droppedFile))
                     {
                         Song addedSong = new Song
