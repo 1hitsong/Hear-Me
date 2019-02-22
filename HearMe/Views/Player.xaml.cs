@@ -1,15 +1,9 @@
 ﻿using HearMe.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using TagLib;
-using TagFile = TagLib.File;
 
 namespace HearMe
 {

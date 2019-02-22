@@ -30,5 +30,5 @@ namespace HearMe.Models
         {
             return index < Files.Count() ? Files.ElementAt(index) : null;
         }
-}
+    }
 }

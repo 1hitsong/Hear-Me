@@ -95,7 +95,14 @@ namespace HearMe.ViewModels
         {
             foreach (string file in filesToAdd)
             {
-                if (System.IO.Path.GetExtension(file) != ".mp3")
+                FileInfo pathInfo = new FileInfo(file);
+
+                if (pathInfo.Attributes.ToString() == "Directory")
+                {
+                    AddFilesToPlaylist(Directory.GetFiles(file, "*.mp3", SearchOption.AllDirectories));
+                }
+
+                if (pathInfo.Extension != ".mp3")
                 {
                     continue;
                 }
@@ -221,11 +228,22 @@ namespace HearMe.ViewModels
 
         public void Dispose()
         {
-            audioPlayer.OutputDevice?.Dispose();
-            audioPlayer.OutputDevice = null;
+            if (audioPlayer == null)
+            {
+                return;
+            }
 
-            audioPlayer.AudioFile?.Dispose();
-            audioPlayer.AudioFile = null;
+            if (audioPlayer.OutputDevice != null)
+            {
+                audioPlayer.OutputDevice?.Dispose();
+                audioPlayer.OutputDevice = null;
+            }
+
+            if (audioPlayer.AudioFile != null)
+            {
+                audioPlayer.AudioFile?.Dispose();
+                audioPlayer.AudioFile = null;
+            }
 
             audioPlayer = null;
         }
