@@ -23,7 +23,7 @@
         <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Margin="0,92,120,0" Foreground="White"/>
         <Label x:Name="songTitle" Content="{Binding PlayingSongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,30,0,0" Foreground="White"/>
         <Label x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="245,145,0,0" Foreground="White" Height="25" MouseDown="ClearPlaylist"/>
-        <ListBox Background="#e7e7e7" AlternationCount="2"  x:Name="playlist" MouseDoubleClick="PlaySongFromPlaylist" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="272" Margin="10,175,0,0">
+        <ListBox Background="#e7e7e7" AlternationCount="2"  x:Name="playlist" KeyDown="DeleteSelectedFile" SelectionMode="Multiple" MouseDoubleClick="PlaySongFromPlaylist" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="272" Margin="10,175,0,0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">

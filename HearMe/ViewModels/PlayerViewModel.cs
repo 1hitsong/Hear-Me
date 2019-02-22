@@ -117,6 +117,14 @@ namespace HearMe.ViewModels
                 audioPlayer.OutputDevice.Stopped -= PlaybackDevicePlaybackStopped;
         }
 
+        public void RemoveFromPlaylist(System.Collections.IList selectedSongs)
+        {
+            for (int i = selectedSongs.Count - 1; i >= 0; i--)
+            {
+                Playlist.Files.RemoveAt(Playlist.Files.IndexOf((Song)selectedSongs[i]));
+            }
+        }
+
         public void PlayFile(int playlistIndex)
         {
             Song selectedSong = Playlist.ElementAt(playlistIndex);

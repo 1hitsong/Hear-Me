@@ -73,6 +73,14 @@ namespace HearMe
             }
         }
 
+        private void DeleteSelectedFile(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete || e.Key == Key.Back)
+            {
+                _viewModel.RemoveFromPlaylist(playlist.SelectedItems);
+            }
+        }
+
         private void SetVolume(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             _viewModel.SetVolume((float)volumeBar.Value / (float)volumeBar.Maximum);
