@@ -1,9 +1,12 @@
 ﻿using HearMe.ViewModels;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace HearMe
 {
@@ -86,10 +89,13 @@ namespace HearMe
             _viewModel.SetVolume((float)volumeBar.Value / (float)volumeBar.Maximum);
         }
 
-        private void PlaySongFromPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void PlaySongFromPlaylist(object sender, MouseButtonEventArgs e)
         {
-            _viewModel.PlayFile(playlist.SelectedIndex);
+            ListBoxItem clickedSong = (ListBoxItem)sender;
+ 
+            _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((Song)clickedSong.Content));
             _timer.Start();
+
         }
 
         private void Play(object sender, RoutedEventArgs e)
