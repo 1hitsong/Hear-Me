@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
+using System.Windows.Media;
 
 namespace HearMe
 {
@@ -68,6 +70,11 @@ namespace HearMe
             _viewModel.Playlist.Files.Clear();
         }
 
+        private void SavePlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _viewModel.Playlist.Save();
+        }
+
         public void AddToPlaylist(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -92,7 +99,7 @@ namespace HearMe
         private void PlaySongFromPlaylist(object sender, MouseButtonEventArgs e)
         {
             ListBoxItem clickedSong = (ListBoxItem)sender;
- 
+
             _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((Song)clickedSong.Content));
             _timer.Start();
 
@@ -107,6 +114,28 @@ namespace HearMe
         private void Stop(object sender, RoutedEventArgs e)
         {
             _viewModel.Stop();
+        }
+
+        private void ShowPlaylist(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation db = new DoubleAnimation();
+            db.Duration = TimeSpan.FromSeconds(.3);
+
+            db.From = -this.Left;
+            db.To = this.Width;
+
+            slideToggle.BeginAnimation(TranslateTransform.XProperty, db);
+        }
+
+        private void HidePlaylist(object sender, RoutedEventArgs e)
+        {
+            DoubleAnimation db = new DoubleAnimation();
+            db.Duration = TimeSpan.FromSeconds(.3);
+
+            db.To = -this.Left;
+            db.From = this.Width;
+
+            slideToggle.BeginAnimation(TranslateTransform.XProperty, db);
         }
 
         private void Slider_DragStarted(object sender, DragStartedEventArgs e)

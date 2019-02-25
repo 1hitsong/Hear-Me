@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using TagFile = TagLib.File;
@@ -10,7 +11,8 @@ namespace HearMe
         public string FileName { get; set; }
         public string Artist { get; set; }
         public string Title { get; set; }
-        public string Length { get; set; }
+        public string Album { get; set; }
+        public TimeSpan Length { get; set; }
         public BitmapImage AlbumArt { get; set; }
 
         public Song(string file)
@@ -34,7 +36,9 @@ namespace HearMe
 
                 FileName = file;
                 Title = tags == null ? "Unknown Track" : tags.Tag.Title.Replace("\0", "");
+                Album = tags == null ? "Unknown Album" : tags.Tag.Album.Replace("\0", "");
                 Artist = tags == null ? "Unknown Artist" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "");
+                Length = TimeSpan.FromSeconds(60);
             }
         }
     }

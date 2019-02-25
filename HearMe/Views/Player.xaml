@@ -7,42 +7,67 @@
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"
-        MouseDown="Window_MouseDown"
         Background="White"
         BorderBrush="LightGray" BorderThickness="1"
         Title="Hear Me" Height="400" Width="300">
-    <Grid Background="#202020" Drop="AddToPlaylist" AllowDrop="True">
-        <Image x:Name="cover" Source="{Binding AlbumArt}" HorizontalAlignment="Left" Height="50" Margin="10,10,0,0" VerticalAlignment="Top" Width="50"/>
-        <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="Window_Close" Canvas.Left="180" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#f7f7f7" />
-        <Button x:Name="previousButton" Content="&#9198;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Previous" Margin="20,125,0,0"/>
-        <Button x:Name="stopButton" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Stop" Margin="160,125,0,0"/>
-        <Button x:Name="playButton" Content="&#9199;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Margin="60,125,0,0"/>
-        <Button x:Name="nextButton" Content="&#9197;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Next" Margin="250,125,0,0"/>
-        <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Margin="10,77,0,0" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="GoToPosition"/>
-        <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="202,77,0,0" ValueChanged="SetVolume" Width="80" Value="6"/>
-        <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Margin="0,92,120,0" Foreground="White"/>
-        <Label x:Name="songTitle" Content="{Binding PlayingSongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,30,0,0" Foreground="White"/>
-        <Label x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="245,145,0,0" Foreground="White" Height="25" MouseDown="ClearPlaylist"/>
-        <ListBox Background="#e7e7e7" AlternationCount="2"  x:Name="playlist" KeyDown="DeleteSelectedFile" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="272" Margin="10,175,0,0">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                        <Label Content="{Binding Artist}" />
-                        <Label>-</Label>
-                        <Label Content="{Binding Title}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <EventSetter Event="MouseDoubleClick" Handler="PlaySongFromPlaylist" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-    </Grid>
+    <Canvas Background="#202020" Drop="AddToPlaylist" AllowDrop="True">
+        <Canvas Background="#ffffff" Name="canvasPlaylist" Canvas.Left="-300" Canvas.Top="0" Height="400" Width="300" Panel.ZIndex="10">
+            <Canvas.RenderTransform>
+                <TranslateTransform x:Name="slideToggle"/>
+            </Canvas.RenderTransform>
+            <ListBox AlternationCount="2" BorderThickness="0" x:Name="playlist" KeyDown="DeleteSelectedFile" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="350" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="15">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
+                            <Label Content="{Binding Artist}" />
+                            <Label>-</Label>
+                            <Label Content="{Binding Title}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <EventSetter Event="MouseDoubleClick" Handler="PlaySongFromPlaylist" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+            <Label x:Name="savePlaylist" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" MouseDown="SavePlaylist" Canvas.Left="15" Canvas.Top="370"/>
+            <Label x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" MouseDown="ClearPlaylist" Canvas.Left="245" Canvas.Top="370"/>
+            <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="HidePlaylist" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#202020" />
+        </Canvas>
+        <Canvas Name="canvasPlayer">
+            <Button Click="ShowPlaylist" Style="{DynamicResource FlatButtonStyle}" x:Name="button" Content="PL" Width="30" Canvas.Left="10" Canvas.Top="24"/>
+            <Image x:Name="cover" Source="{Binding AlbumArt}" HorizontalAlignment="Left" Height="207" VerticalAlignment="Top" Width="207" Canvas.Left="45" Canvas.Top="45"/>
+            <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="Window_Close" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#f7f7f7" Panel.ZIndex="5" />
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="previousButton" Content="&lt;&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Previous" Canvas.Left="20" Canvas.Top="340"/>
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="stopButton" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Stop" Canvas.Left="160" Canvas.Top="340"/>
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="playButton" Content="&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Canvas.Left="60" Canvas.Top="340"/>
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="nextButton" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Next" Canvas.Left="250" Canvas.Top="340"/>
+            <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="GoToPosition" Canvas.Left="10" Canvas.Top="292"/>
+            <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" ValueChanged="SetVolume" Width="80" Value="6" Canvas.Left="202" Canvas.Top="292"/>
+            <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Foreground="White" Canvas.Top="312" Canvas.Left="150"/>
+            <Label x:Name="songTitle" Content="{Binding PlayingSongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,250,0,0" Foreground="White"/>
+            <Rectangle Fill="Azure" Height="20" Width="155" MouseDown="Window_MouseDown" Panel.ZIndex="1" Canvas.Left="80"/>
+        </Canvas>
+    </Canvas>
 
     <Window.Resources>
-        <Style  TargetType="{x:Type ListBoxItem}">
+        <Style TargetType="Button" x:Key="FlatButtonStyle">
+            <Setter Property="Background" Value="DarkCyan"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type ListBoxItem}">
             <Style.Triggers>
                 <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                     <Setter Property="Background" Value="#e7e7e7"></Setter>
