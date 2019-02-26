@@ -17,7 +17,12 @@ namespace HearMe
 
         public Song(string file)
         {
-            using (TagFile tags = TagFile.Create(file))
+            if (Path.GetExtension(file) != ".mp3")
+            {
+                return;
+            }
+
+            using (TagFile tags = TagFile.Create(@file))
             {
                 if (tags.Tag.Pictures.Any())
                 {

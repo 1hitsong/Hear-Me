@@ -31,9 +31,10 @@
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
-            <Label x:Name="savePlaylist" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" MouseDown="SavePlaylist" Canvas.Left="15" Canvas.Top="370"/>
+            <Label x:Name="openPlaylist" Content="Open" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" MouseDown="OpenPlaylist" Canvas.Left="15" Canvas.Top="370"/>
             <Label x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" MouseDown="ClearPlaylist" Canvas.Left="245" Canvas.Top="370"/>
             <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="HidePlaylist" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#202020" />
+            <Label x:Name="savePlaylist" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" MouseDown="SavePlaylist" Canvas.Left="65" Canvas.Top="370"/>
         </Canvas>
         <Canvas Name="canvasPlayer">
             <Button Click="ShowPlaylist" Style="{DynamicResource FlatButtonStyle}" x:Name="button" Content="PL" Width="30" Canvas.Left="10" Canvas.Top="24"/>

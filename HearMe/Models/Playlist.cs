@@ -45,6 +45,14 @@ namespace HearMe.Models
             });
         }
 
+        public void Clear()
+        {
+            Files.Clear();
+            PlaylistFile.PlaylistEntries.Clear();
+
+            var test = "";
+        }
+
         public void Save()
         {
             M3uContent content = new M3uContent();
@@ -67,6 +75,36 @@ namespace HearMe.Models
                     byte[] data = new byte[] { 0x0 };
                     fs.Write(data, 0, data.Length);
                 }
+            }
+        }
+
+        public void Open()
+        {
+            M3uPlaylist playlist;
+
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.Filter = "Playlist files (*.m3u)|*.m3u|All files (*.*)|*.*";
+            openFileDialog1.Title = "Open Playlist";
+            openFileDialog1.ShowDialog();
+
+            if (openFileDialog1.FileName != "")
+            {
+                Clear();
+
+                M3uContent content = new M3uContent();
+                using (System.IO.FileStream fs = (System.IO.FileStream)openFileDialog1.OpenFile())
+                {
+                    playlist = content.GetFromStream(fs);
+                }
+
+                // Remove final null char at end of last entry
+                playlist.PlaylistEntries.Last().Path = playlist.PlaylistEntries.Last().Path.Substring(0, playlist.PlaylistEntries.Last().Path.Length - 1);
+
+                foreach (M3uPlaylistEntry playlistEntry in playlist.PlaylistEntries.ToList())
+                {
+                    Add(new Song(@playlistEntry.Path));
+                }
+
             }
         }
 

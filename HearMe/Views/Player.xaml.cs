@@ -67,12 +67,17 @@ namespace HearMe
 
         private void ClearPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            _viewModel.Playlist.Files.Clear();
+            _viewModel.Playlist.Clear();
         }
 
         private void SavePlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             _viewModel.Playlist.Save();
+        }
+
+        private void OpenPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _viewModel.Playlist.Open();
         }
 
         public void AddToPlaylist(object sender, DragEventArgs e)
