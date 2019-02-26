@@ -190,7 +190,7 @@ namespace HearMe.ViewModels
 
         void PlaybackDevicePlaybackStopped(object sender, StoppedEventArgs e)
         {
-            if (CurrentTime.Equals(TotalTime))
+            if (CurrentTime >= TotalTime)
             {
                 MovePlaylistSong(1);
             }
