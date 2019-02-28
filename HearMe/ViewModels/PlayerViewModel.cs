@@ -13,13 +13,23 @@ namespace HearMe.ViewModels
         AudioPlayer audioPlayer;
         MainWindow PlayerView;
 
+        public class NavigationEventArgs : EventArgs
+        {
+            public sbyte direction { get; set; }
+        }
+
         public PlayerViewModel(MainWindow view)
         {
+            NavigationRequest += HandleNavigationRequest;
+
+            DataUpdateRequest += UpdatePlayingSongPosition;
+            DataUpdateRequest += UpdatePlayingSongDisplayText;
+
             PlayerView = view;
             Playlist = new Playlist();
         }
 
-        private int PlayingSongPlaylistIndex { get; set;}
+        private int PlayingSongPlaylistIndex { get; set; }
 
         private string _playingsongTitle;
         public string PlayingSongTitle
@@ -90,6 +100,9 @@ namespace HearMe.ViewModels
 
         public Playlist Playlist { get; set; }
 
+        public event EventHandler<NavigationEventArgs> NavigationRequest;
+        public event EventHandler<EventArgs> DataUpdateRequest;
+
 
         public void AddFilesToPlaylist(string[] filesToAdd)
         {
@@ -151,48 +164,66 @@ namespace HearMe.ViewModels
             UpdateSongInformationDisplay(selectedSong);
 
             audioPlayer = new AudioPlayer(@fileLocation);
-
             audioPlayer.Play();
+
+            audioPlayer.OutputDevice.Stopped += PlaybackDevicePlaybackStopped;
 
             PlayingSongLength = TotalTime.TotalSeconds;
 
             audioPlayer.OutputDevice.Volume = Volume;
-
-            audioPlayer.OutputDevice.Stopped += PlaybackDevicePlaybackStopped;
+            
         }
 
-        public void UpdateSeekPosition(object sender, System.Timers.ElapsedEventArgs e)
+        public void UpdateBoundData(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            DataUpdateRequest.Invoke(this, null);
+        }
+
+        public void UpdatePlayingSongPosition(object sender, EventArgs e)
         {
             PlayingSongPosition = CurrentTime.TotalSeconds;
-
-            UpdateSongInformation();
         }
 
-        public void MovePlaylistSong(sbyte indexMovementDirection)
-        {
-            // Don't allow movement beyond last playlist song
-            if (PlayingSongPlaylistIndex + indexMovementDirection == Playlist.Files.Count)
-                return;
-
-            // Don't allow movement below 0
-            if (PlayingSongPlaylistIndex + indexMovementDirection < 0)
-                return;
-
-            PlayingSongPlaylistIndex += indexMovementDirection;
-
-            PlayFile(PlayingSongPlaylistIndex);
-        }
-
-        private void UpdateSongInformation()
+        private void UpdatePlayingSongDisplayText(object sender, EventArgs e)
         {
             DisplayText = CurrentTime.ToString("mm\\:ss") + " / " + TotalTime.ToString("mm\\:ss");
         }
 
+        public void HandleNavigationRequest(object sender, NavigationEventArgs e)
+        {
+            // Don't allow movement beyond last playlist song
+            if (PlayingSongPlaylistIndex + e.direction == Playlist.Files.Count)
+            {
+                return;
+            }
+
+            // Don't allow movement below 0
+            if (PlayingSongPlaylistIndex + e.direction < 0)
+            {
+                return;
+            }
+
+            PlayingSongPlaylistIndex += e.direction;
+
+            PlayFile(PlayingSongPlaylistIndex);
+        }
+
+        public void MovePlaylistSong(sbyte indexMovementDirection)
+        {
+            NavigationRequest.Invoke(this, new NavigationEventArgs {direction = indexMovementDirection });
+        }
+
         void PlaybackDevicePlaybackStopped(object sender, StoppedEventArgs e)
         {
-            if (CurrentTime >= TotalTime)
+            if (audioPlayer.OutputDevice.PlaybackState == CSCore.SoundOut.PlaybackState.Playing)
+            {
+                return;
+            }
+
+            if (audioPlayer.IsPlaying())
             {
                 MovePlaylistSong(1);
+                return;
             }
         }
 
@@ -210,8 +241,11 @@ namespace HearMe.ViewModels
 
         public void Stop()
         {
+
             if (audioPlayer != null)
-                audioPlayer.OutputDevice.Stop();
+            {
+                audioPlayer.Stop();
+            }
         }
 
         public void SetVolume(float volumeLevel)
@@ -243,13 +277,13 @@ namespace HearMe.ViewModels
 
             if (audioPlayer.OutputDevice != null)
             {
-                audioPlayer.OutputDevice?.Dispose();
+                audioPlayer.OutputDevice.Dispose();
                 audioPlayer.OutputDevice = null;
             }
 
             if (audioPlayer.AudioFile != null)
             {
-                audioPlayer.AudioFile?.Dispose();
+                audioPlayer.AudioFile.Dispose();
                 audioPlayer.AudioFile = null;
             }
 

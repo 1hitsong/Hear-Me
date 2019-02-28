@@ -49,8 +49,6 @@ namespace HearMe.Models
         {
             Files.Clear();
             PlaylistFile.PlaylistEntries.Clear();
-
-            var test = "";
         }
 
         public void Save()

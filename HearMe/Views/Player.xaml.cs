@@ -31,7 +31,7 @@ namespace HearMe
 
             _timer = new System.Timers.Timer();
             _timer.Interval = 300;
-            _timer.Elapsed += _viewModel.UpdateSeekPosition;
+            _timer.Elapsed += _viewModel.UpdateBoundData;
 
             Closing += OnWindowClosing;
         }

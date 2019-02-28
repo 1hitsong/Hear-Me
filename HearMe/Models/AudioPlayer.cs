@@ -15,16 +15,37 @@ namespace HearMe.Models
         public ISoundOut OutputDevice;
         public IWaveSource AudioFile;
 
+        private PlayerState State { get; set; }
+
+        private enum PlayerState
+        {
+            Paused,
+            Playing
+        }
+
         public AudioPlayer(string audioFile)
         {
             AudioFile = new DmoMp3Decoder(audioFile);
             OutputDevice = GetSoundOut();
             OutputDevice.Initialize(AudioFile);
+            State = PlayerState.Paused;
+        }
+
+        public bool IsPlaying()
+        {
+            return State == PlayerState.Playing;
         }
 
         public void Play()
         {
             OutputDevice.Play();
+            State = PlayerState.Playing;
+        }
+
+        public void Stop()
+        {
+            OutputDevice.Stop();
+            State = PlayerState.Paused;
         }
 
         private ISoundOut GetSoundOut()
