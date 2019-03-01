@@ -27,6 +27,8 @@ namespace HearMe.ViewModels
 
             PlayerView = view;
             Playlist = new Playlist();
+
+            SetupKeyboardHooks();
         }
 
         private int PlayingSongPlaylistIndex { get; set; }
@@ -288,6 +290,40 @@ namespace HearMe.ViewModels
             }
 
             audioPlayer = null;
+        }
+
+        private GlobalKeyboardHook _globalKeyboardHook;
+
+        public void SetupKeyboardHooks()
+        {
+            _globalKeyboardHook = new GlobalKeyboardHook();
+            _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
+        }
+
+        private void OnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
+        {
+            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
+            {
+                if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaNext)
+                    MovePlaylistSong(1);
+
+                if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaPrevious)
+                    MovePlaylistSong(-1);
+
+                if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaPlay)
+                {
+                    if (audioPlayer.IsPlaying())
+                    {
+                        Stop();
+                    }
+                    else
+                    {
+                        Play();
+                    }
+                }
+
+                e.Handled = true;
+            }
         }
 
         #region INotifyPropertyChanged Implementation
