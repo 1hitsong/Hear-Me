@@ -265,7 +265,7 @@ namespace HearMe.ViewModels
 
         public void UpdateSongInformationDisplay(Song playingSong)
         {
-            AlbumArt = playingSong.AlbumArt;
+            AlbumArt = playingSong.GetAlbumArt();
             PlayingSongTitle = playingSong.Artist + "-" + playingSong.Title;
             PlayerView.Title = PlayingSongTitle;
         }
