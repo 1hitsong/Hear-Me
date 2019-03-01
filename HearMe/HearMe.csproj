@@ -204,6 +204,7 @@
     </ApplicationDefinition>
     <Compile Include="GlobalKeyboard.cs" />
     <Compile Include="Models\AudioPlayer.cs" />
+    <Compile Include="Models\NavigationEventArgs.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\Song.cs" />
     <Page Include="Views\Player.xaml">

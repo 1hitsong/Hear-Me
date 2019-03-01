@@ -1,10 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using HearMe.Models;
-
-using CSCore;
 using System.IO;
 using System.Windows.Media.Imaging;
+
+using HearMe.Models;
+using CSCore;
 
 namespace HearMe.ViewModels
 {
@@ -12,11 +12,6 @@ namespace HearMe.ViewModels
     {
         AudioPlayer audioPlayer;
         MainWindow PlayerView;
-
-        public class NavigationEventArgs : EventArgs
-        {
-            public sbyte direction { get; set; }
-        }
 
         public PlayerViewModel(MainWindow view)
         {
@@ -108,22 +103,7 @@ namespace HearMe.ViewModels
 
         public void AddFilesToPlaylist(string[] filesToAdd)
         {
-            foreach (string file in filesToAdd)
-            {
-                FileInfo pathInfo = new FileInfo(file);
-
-                if (pathInfo.Attributes.ToString() == "Directory")
-                {
-                    AddFilesToPlaylist(Directory.GetFiles(file, "*.mp3", SearchOption.AllDirectories));
-                }
-
-                if (pathInfo.Extension != ".mp3")
-                {
-                    continue;
-                }
-
-                Playlist.Add(new Song(file));
-            }
+            Playlist.Add(filesToAdd);
         }
 
         public void UnbindOnStopEvent()
@@ -134,10 +114,7 @@ namespace HearMe.ViewModels
 
         public void RemoveFromPlaylist(System.Collections.IList selectedSongs)
         {
-            for (int i = selectedSongs.Count - 1; i >= 0; i--)
-            {
-                Playlist.Files.RemoveAt(Playlist.Files.IndexOf((Song)selectedSongs[i]));
-            }
+            Playlist.Remove(selectedSongs);
         }
 
         public void PlayFile(int playlistIndex)
@@ -194,25 +171,25 @@ namespace HearMe.ViewModels
         public void HandleNavigationRequest(object sender, NavigationEventArgs e)
         {
             // Don't allow movement beyond last playlist song
-            if (PlayingSongPlaylistIndex + e.direction == Playlist.Files.Count)
+            if (PlayingSongPlaylistIndex + e.Direction == Playlist.Files.Count)
             {
                 return;
             }
 
             // Don't allow movement below 0
-            if (PlayingSongPlaylistIndex + e.direction < 0)
+            if (PlayingSongPlaylistIndex + e.Direction < 0)
             {
                 return;
             }
 
-            PlayingSongPlaylistIndex += e.direction;
+            PlayingSongPlaylistIndex += e.Direction;
 
             PlayFile(PlayingSongPlaylistIndex);
         }
 
         public void MovePlaylistSong(sbyte indexMovementDirection)
         {
-            NavigationRequest.Invoke(this, new NavigationEventArgs {direction = indexMovementDirection });
+            NavigationRequest.Invoke(this, new NavigationEventArgs {Direction = indexMovementDirection });
         }
 
         void PlaybackDevicePlaybackStopped(object sender, StoppedEventArgs e)
@@ -304,6 +281,9 @@ namespace HearMe.ViewModels
         {
             if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {
+                if (e.KeyboardData.VirtualCode == 46 || e.KeyboardData.VirtualCode == 8)
+                    RemoveFromPlaylist(PlayerView.playlist.SelectedItems);
+
                 if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaNext)
                     MovePlaylistSong(1);
 

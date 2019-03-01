@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32;
@@ -43,6 +44,34 @@ namespace HearMe.Models
                 Path = songToAdd.FileName,
                 Title = songToAdd.Title
             });
+        }
+
+        public void Add(string[] filesToAdd)
+        {
+            foreach (string file in filesToAdd)
+            {
+                FileInfo pathInfo = new FileInfo(file);
+
+                if (pathInfo.Attributes.ToString() == "Directory")
+                {
+                    Add(Directory.GetFiles(file, "*.mp3", SearchOption.AllDirectories));
+                }
+
+                if (pathInfo.Extension != ".mp3")
+                {
+                    continue;
+                }
+
+                Add(new Song(file));
+            }
+        }
+
+        public void Remove(System.Collections.IList selectedSongs)
+        {
+            for (int i = selectedSongs.Count - 1; i >= 0; i--)
+            {
+                Files.RemoveAt(Files.IndexOf((Song)selectedSongs[i]));
+            }
         }
 
         public void Clear()
