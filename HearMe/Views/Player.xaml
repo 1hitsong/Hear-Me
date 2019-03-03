@@ -15,7 +15,7 @@
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="slideToggle"/>
             </Canvas.RenderTransform>
-            <ListBox AlternationCount="2" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="350" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="15">
+            <ListBox AlternationCount="2" KeyDown="DeleteSelectedFile" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="350" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="15">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">

@@ -5,6 +5,7 @@ using System.Windows.Media.Imaging;
 
 using HearMe.Models;
 using CSCore;
+using System.Linq;
 
 namespace HearMe.ViewModels
 {
@@ -279,10 +280,14 @@ namespace HearMe.ViewModels
 
         private void OnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
         {
-            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
+           if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {
-                if (e.KeyboardData.VirtualCode == 46 || e.KeyboardData.VirtualCode == 8)
-                    RemoveFromPlaylist(PlayerView.playlist.SelectedItems);
+                int[] validKeys = new int[] {GlobalKeyboardHook.VkMediaNext, GlobalKeyboardHook.VkMediaPrevious, GlobalKeyboardHook.VkMediaPlay};
+
+                if (!validKeys.Contains(e.KeyboardData.VirtualCode))
+                {
+                    return;
+                }
 
                 if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaNext)
                     MovePlaylistSong(1);
