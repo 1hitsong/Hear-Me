@@ -19,7 +19,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                            <Label Content="{Binding Artist}" />
+                            <Label Content="{Binding AlbumArtist}" />
                             <Label>-</Label>
                             <Label Content="{Binding Title}" />
                         </StackPanel>
@@ -40,10 +40,10 @@
             <Button Click="ShowPlaylist" Style="{DynamicResource FlatButtonStyle}" x:Name="button" Content="PL" Width="30" Canvas.Left="10" Canvas.Top="24"/>
             <Image x:Name="cover" Source="{Binding AlbumArt}" HorizontalAlignment="Left" Height="207" VerticalAlignment="Top" Width="207" Canvas.Left="45" Canvas.Top="45"/>
             <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="Window_Close" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#f7f7f7" Panel.ZIndex="5" />
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="previousButton" Content="&lt;&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Previous" Canvas.Left="20" Canvas.Top="340"/>
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="stopButton" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Stop" Canvas.Left="160" Canvas.Top="340"/>
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="previousButton" Command="{Binding PreviousCommand}" Content="&lt;&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Canvas.Left="20" Canvas.Top="340"/>
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="stopButton" Command="{Binding StopCommand}" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Canvas.Left="160" Canvas.Top="340"/>
             <Button Style="{DynamicResource FlatButtonStyle}" x:Name="playButton" Content="&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Canvas.Left="60" Canvas.Top="340"/>
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="nextButton" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Click="Next" Canvas.Left="250" Canvas.Top="340"/>
+            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="nextButton"  Command="{Binding NextCommand}" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Canvas.Left="250" Canvas.Top="340"/>
             <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="GoToPosition" Canvas.Left="10" Canvas.Top="292"/>
             <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" ValueChanged="SetVolume" Width="80" Value="6" Canvas.Left="202" Canvas.Top="292"/>
             <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Foreground="White" Canvas.Top="312" Canvas.Left="150"/>

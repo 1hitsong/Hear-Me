@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
+using PlaylistsNET.Models;
 
 namespace HearMe
 {
@@ -53,16 +54,6 @@ namespace HearMe
             this.Close();
         }
 
-        public void Previous(object sender, RoutedEventArgs e)
-        {
-            _viewModel.MovePlaylistSong(-1);
-        }
-
-        public void Next(object sender, RoutedEventArgs e)
-        {
-            _viewModel.MovePlaylistSong(1);
-        }
-
         private void ClearPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             _viewModel.Playlist.Clear();
@@ -103,20 +94,14 @@ namespace HearMe
         {
             ListBoxItem clickedSong = (ListBoxItem)sender;
 
-            _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((Song)clickedSong.Content));
+            _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((M3uPlaylistEntry)clickedSong.Content));
             _timer.Start();
-
         }
 
         private void Play(object sender, RoutedEventArgs e)
         {
             _viewModel.Play();
             _timer.Start();
-        }
-
-        private void Stop(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Stop();
         }
 
         private void ShowPlaylist(object sender, RoutedEventArgs e)

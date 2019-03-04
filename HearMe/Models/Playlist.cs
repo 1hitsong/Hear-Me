@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,33 +11,28 @@ using PlaylistsNET.Models;
 
 namespace HearMe.Models
 {
-    class Playlist
+    class Playlist : INotifyPropertyChanged
     {
 
-        private ObservableCollection<Song> _files;
-        public ObservableCollection<Song> Files
+        private ObservableCollection<M3uPlaylistEntry> _files;
+        public ObservableCollection<M3uPlaylistEntry> Files
         {
             get { return _files; }
             set
             {
                 _files = value;
+                OnPropertyChanged("Files");
             }
         }
 
-        private M3uPlaylist PlaylistFile { get; set; }
-
         public Playlist()
         {
-            Files = new ObservableCollection<Song>();
-            PlaylistFile = new M3uPlaylist {
-                IsExtended = true
-            };
+            Files = new ObservableCollection<M3uPlaylistEntry>();
         }
 
         public void Add(Song songToAdd)
         {
-            Files.Add(songToAdd);
-            PlaylistFile.PlaylistEntries.Add(new M3uPlaylistEntry()
+            Files.Add(new M3uPlaylistEntry()
             {
                 Album = songToAdd.Album,
                 AlbumArtist = songToAdd.Artist,
@@ -70,19 +66,26 @@ namespace HearMe.Models
         {
             for (int i = selectedSongs.Count - 1; i >= 0; i--)
             {
-                Files.RemoveAt(Files.IndexOf((Song)selectedSongs[i]));
+                Files.RemoveAt(Files.IndexOf((M3uPlaylistEntry)selectedSongs[i]));
             }
         }
 
         public void Clear()
         {
             Files.Clear();
-            PlaylistFile.PlaylistEntries.Clear();
         }
 
         public void Save()
         {
+            M3uPlaylist PlaylistFile = new M3uPlaylist
+            {
+                IsExtended = true
+            };
+
+            PlaylistFile.PlaylistEntries = Files.ToList();
+
             M3uContent content = new M3uContent();
+
             string toSave = content.ToText(PlaylistFile);
 
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -107,8 +110,6 @@ namespace HearMe.Models
 
         public void Open()
         {
-            M3uPlaylist playlist;
-
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "Playlist files (*.m3u)|*.m3u|All files (*.*)|*.*";
             openFileDialog1.Title = "Open Playlist";
@@ -118,26 +119,42 @@ namespace HearMe.Models
             {
                 Clear();
 
+                M3uPlaylist playlist = new M3uPlaylist
+                {
+                    IsExtended = true
+                };
+
                 M3uContent content = new M3uContent();
+
                 using (System.IO.FileStream fs = (System.IO.FileStream)openFileDialog1.OpenFile())
                 {
                     playlist = content.GetFromStream(fs);
+
+                    // Remove final null char at end of last entry
+                    playlist.PlaylistEntries.Last().Path = playlist.PlaylistEntries.Last().Path.Substring(0, playlist.PlaylistEntries.Last().Path.Length - 1);
+
+                    Files = new ObservableCollection<M3uPlaylistEntry>(playlist.PlaylistEntries);
                 }
 
-                // Remove final null char at end of last entry
-                playlist.PlaylistEntries.Last().Path = playlist.PlaylistEntries.Last().Path.Substring(0, playlist.PlaylistEntries.Last().Path.Length - 1);
-
-                foreach (M3uPlaylistEntry playlistEntry in playlist.PlaylistEntries.ToList())
-                {
-                    Add(new Song(@playlistEntry.Path));
-                }
-
+                playlist = null;
             }
         }
 
-        public Song ElementAt(int index)
+        public M3uPlaylistEntry ElementAt(int index)
         {
             return index < Files.Count() ? Files.ElementAt(index) : null;
         }
+
+        #region INotifyPropertyChanged Implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged(string name)
+        {
+            var handler = System.Threading.Interlocked.CompareExchange(ref PropertyChanged, null, null);
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+        #endregion
     }
 }

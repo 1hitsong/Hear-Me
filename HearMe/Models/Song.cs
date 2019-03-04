@@ -32,11 +32,11 @@ namespace HearMe
             }
         }
 
-        public BitmapImage GetAlbumArt()
+        public static BitmapImage GetAlbumArt(string fileName)
         {
             BitmapImage bitmap = new BitmapImage();
 
-            using (TagFile tags = TagFile.Create(FileName))
+            using (TagFile tags = TagFile.Create(fileName))
             {
                 if (tags.Tag.Pictures.Any())
                 {
@@ -51,21 +51,21 @@ namespace HearMe
                 }
                 else
                 {
-                    bitmap = GetFolderAlbumImage();
+                    bitmap = GetFolderAlbumImage(fileName);
                 }
             }
 
             return bitmap;
         }
 
-        private BitmapImage GetFolderAlbumImage()
+        public static BitmapImage GetFolderAlbumImage(string fileName)
         {
             BitmapImage tmp = new BitmapImage();
 
             string[] validImageTypes = { ".jpg", ".jpeg", ".gif", ".png" };
             string[] validFileNames = { "album", "default", "index", "cover" };
 
-            List<string> imageFiles = Directory.GetFiles(Path.GetDirectoryName(FileName), "*.*", SearchOption.TopDirectoryOnly)
+            List<string> imageFiles = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.*", SearchOption.TopDirectoryOnly)
                   .Where(file => validImageTypes.Contains(Path.GetExtension(file)) && validFileNames.Contains(Path.GetFileNameWithoutExtension(file)))
                   .ToList();
 

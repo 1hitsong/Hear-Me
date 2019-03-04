@@ -4,8 +4,10 @@ using System.IO;
 using System.Windows.Media.Imaging;
 
 using HearMe.Models;
+using HearMe.Helpers;
 using CSCore;
 using System.Linq;
+using PlaylistsNET.Models;
 
 namespace HearMe.ViewModels
 {
@@ -13,6 +15,10 @@ namespace HearMe.ViewModels
     {
         AudioPlayer audioPlayer;
         MainWindow PlayerView;
+
+        public DelegateCommand NextCommand { get; private set; }
+        public DelegateCommand PreviousCommand { get; private set; }
+        public DelegateCommand StopCommand { get; private set; }
 
         public PlayerViewModel(MainWindow view)
         {
@@ -25,6 +31,25 @@ namespace HearMe.ViewModels
             Playlist = new Playlist();
 
             SetupKeyboardHooks();
+
+            NextCommand = new DelegateCommand(Next, null);
+            PreviousCommand = new DelegateCommand(Previous, null);
+            StopCommand = new DelegateCommand(Stop, null);
+        }
+
+        void Next(object arg)
+        {
+            MovePlaylistSong(1);
+        }
+
+        void Previous(object arg)
+        {
+            MovePlaylistSong(-1);
+        }
+
+        void Stop(object arg)
+        {
+            Stop();
         }
 
         private int PlayingSongPlaylistIndex { get; set; }
@@ -120,14 +145,14 @@ namespace HearMe.ViewModels
 
         public void PlayFile(int playlistIndex)
         {
-            Song selectedSong = Playlist.ElementAt(playlistIndex);
+            M3uPlaylistEntry selectedSong = Playlist.ElementAt(playlistIndex);
 
             if (selectedSong == null)
             {
                 return;
             }
 
-            string fileLocation = selectedSong.FileName;
+            string fileLocation = selectedSong.Path;
 
             if (!System.IO.File.Exists(fileLocation))
             {
@@ -241,10 +266,10 @@ namespace HearMe.ViewModels
             audioPlayer.AudioFile.SetPosition(newPosition);
         }
 
-        public void UpdateSongInformationDisplay(Song playingSong)
+        public void UpdateSongInformationDisplay(M3uPlaylistEntry playingSong)
         {
-            AlbumArt = playingSong.GetAlbumArt();
-            PlayingSongTitle = playingSong.Artist + "-" + playingSong.Title;
+            AlbumArt = Song.GetAlbumArt(playingSong.Path);
+            PlayingSongTitle = playingSong.AlbumArtist + "-" + playingSong.Title;
             PlayerView.Title = PlayingSongTitle;
         }
 

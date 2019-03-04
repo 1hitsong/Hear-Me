@@ -203,6 +203,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="GlobalKeyboard.cs" />
+    <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Models\AudioPlayer.cs" />
     <Compile Include="Models\NavigationEventArgs.cs" />
     <Compile Include="Models\Playlist.cs" />
