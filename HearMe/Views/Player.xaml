@@ -45,7 +45,7 @@
             <Button Style="{DynamicResource FlatButtonStyle}" x:Name="playButton" Content="&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Play" Canvas.Left="60" Canvas.Top="340"/>
             <Button Style="{DynamicResource FlatButtonStyle}" x:Name="nextButton"  Command="{Binding NextCommand}" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Canvas.Left="250" Canvas.Top="340"/>
             <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Thumb.DragStarted="Slider_DragStarted" Thumb.DragCompleted="GoToPosition" Canvas.Left="10" Canvas.Top="292"/>
-            <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" ValueChanged="SetVolume" Width="80" Value="6" Canvas.Left="202" Canvas.Top="292"/>
+            <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Canvas.Left="202" Canvas.Top="292" Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Maximum="1" LargeChange="0.1"/>
             <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Foreground="White" Canvas.Top="312" Canvas.Left="150"/>
             <Label x:Name="songTitle" Content="{Binding PlayingSongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,250,0,0" Foreground="White"/>
             <Rectangle Fill="Azure" Height="20" Width="155" MouseDown="Window_MouseDown" Panel.ZIndex="1" Canvas.Left="80"/>

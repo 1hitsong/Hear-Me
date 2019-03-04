@@ -85,11 +85,6 @@ namespace HearMe
             }
         }
 
-        private void SetVolume(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            _viewModel.SetVolume((float)volumeBar.Value / (float)volumeBar.Maximum);
-        }
-
         private void PlaySongFromPlaylist(object sender, MouseButtonEventArgs e)
         {
             ListBoxItem clickedSong = (ListBoxItem)sender;

@@ -98,7 +98,20 @@ namespace HearMe.ViewModels
             }
         }
 
-        public float Volume { get; set; }
+        private float _volume;
+        public float Volume
+        {
+            get { return _volume; }
+            set
+            {
+                if(_volume != value)
+                {
+                    SetVolume(value);
+                    _volume = value;
+                    OnPropertyChanged("Volume");
+                } 
+            }
+        }
 
         public TimeSpan CurrentTime
         {
@@ -255,8 +268,6 @@ namespace HearMe.ViewModels
 
         public void SetVolume(float volumeLevel)
         {
-            Volume = volumeLevel;
-
             if (audioPlayer != null)
                 audioPlayer.OutputDevice.Volume = Volume;
         }
