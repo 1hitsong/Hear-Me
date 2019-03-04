@@ -54,21 +54,6 @@ namespace HearMe
             this.Close();
         }
 
-        private void ClearPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            _viewModel.Playlist.Clear();
-        }
-
-        private void SavePlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            _viewModel.Playlist.Save();
-        }
-
-        private void OpenPlaylist(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            _viewModel.Playlist.Open();
-        }
-
         public void AddToPlaylist(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))

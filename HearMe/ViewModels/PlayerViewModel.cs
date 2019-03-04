@@ -19,6 +19,9 @@ namespace HearMe.ViewModels
         public DelegateCommand NextCommand { get; private set; }
         public DelegateCommand PreviousCommand { get; private set; }
         public DelegateCommand StopCommand { get; private set; }
+        public DelegateCommand OpenPlaylistCommand { get; private set; }
+        public DelegateCommand SavePlaylistCommand { get; private set; }
+        public DelegateCommand ClearPlaylistCommand { get; private set; }
 
         public PlayerViewModel(MainWindow view)
         {
@@ -35,6 +38,24 @@ namespace HearMe.ViewModels
             NextCommand = new DelegateCommand(Next, null);
             PreviousCommand = new DelegateCommand(Previous, null);
             StopCommand = new DelegateCommand(Stop, null);
+            OpenPlaylistCommand = new DelegateCommand(OpenPlaylist, null);
+            SavePlaylistCommand = new DelegateCommand(SavePlaylist, null);
+            ClearPlaylistCommand = new DelegateCommand(ClearPlaylist, null);
+        }
+
+        void ClearPlaylist(object arg)
+        {
+            Playlist.Clear();
+        }
+
+        void SavePlaylist(object arg)
+        {
+            Playlist.Save();
+        }
+
+        void OpenPlaylist(object arg)
+        {
+            Playlist.Open();
         }
 
         void Next(object arg)
