@@ -17,7 +17,6 @@ namespace HearMe
     public partial class MainWindow : Window
     {
         private PlayerViewModel _viewModel;
-        private bool dragStarted = false;
         private System.Timers.Timer _timer;
 
         public MainWindow()
@@ -91,23 +90,6 @@ namespace HearMe
             };
 
             slideToggle.BeginAnimation(TranslateTransform.XProperty, db);
-        }
-
-        private void Slider_DragStarted(object sender, DragStartedEventArgs e)
-        {
-            dragStarted = true;
-            _timer.Stop();
-        }
-
-        private void GoToPosition(object sender, DragCompletedEventArgs e)
-        {
-            if (!dragStarted) return;
-            
-            _viewModel.SetPosition(new TimeSpan(0, (int)(Math.Floor(seekBar.Value / 60)), (int)(Math.Floor(seekBar.Value % 60))));            
-
-            dragStarted = false;
-            _timer.Start();
-
         }
     }
 }

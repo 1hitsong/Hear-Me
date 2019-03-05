@@ -141,8 +141,7 @@ namespace HearMe.ViewModels
             get { return _playingsongPosition; }
             set
             {
-                _playingsongPosition = value;
-                OnPropertyChanged("PlayingSongPosition");
+                SetPosition(value);
             }
         }
 
@@ -247,7 +246,8 @@ namespace HearMe.ViewModels
 
         public void UpdatePlayingSongPosition(object sender, EventArgs e)
         {
-            PlayingSongPosition = CurrentTime.TotalSeconds;
+            _playingsongPosition = CurrentTime.TotalSeconds;
+            OnPropertyChanged("PlayingSongPosition");
         }
 
         private void UpdatePlayingSongDisplayText(object sender, EventArgs e)
@@ -320,9 +320,10 @@ namespace HearMe.ViewModels
                 audioPlayer.OutputDevice.Volume = Volume;
         }
 
-        public void SetPosition(TimeSpan newPosition)
+        public void SetPosition(double newPosition)
         {
-            audioPlayer.AudioFile.SetPosition(newPosition);
+            TimeSpan seekPosition = new TimeSpan(0, (int)(Math.Floor(newPosition / 60)), (int)(Math.Floor(newPosition % 60)));
+            audioPlayer.AudioFile.SetPosition(seekPosition);
         }
 
         public void UpdateSongInformationDisplay(M3uPlaylistEntry playingSong)
