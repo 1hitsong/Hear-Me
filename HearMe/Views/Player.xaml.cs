@@ -54,14 +54,6 @@ namespace HearMe
             this.Close();
         }
 
-        public void AddToPlaylist(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                _viewModel.AddFilesToPlaylist((string[])e.Data.GetData(DataFormats.FileDrop));                
-            }
-        }
-
         private void DeleteSelectedFile(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete || e.Key == Key.Back)

@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         xmlns:local="clr-namespace:HearMe"
         mc:Ignorable="d"
         WindowStyle="None"
@@ -10,7 +12,13 @@
         Background="White"
         BorderBrush="LightGray" BorderThickness="1"
         Title="Hear Me" Height="400" Width="300">
-    <Canvas Background="#202020" Drop="AddToPlaylist" AllowDrop="True">
+    <Canvas Background="#202020" AllowDrop="True">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Drop">
+                <cmd:EventToCommand Command="{Binding DropCommand}"
+                        PassEventArgsToCommand="True" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Canvas Background="#ffffff" Name="canvasPlaylist" Canvas.Left="-300" Canvas.Top="0" Height="400" Width="300" Panel.ZIndex="10">
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="slideToggle"/>

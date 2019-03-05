@@ -8,6 +8,8 @@ using HearMe.Helpers;
 using CSCore;
 using System.Linq;
 using PlaylistsNET.Models;
+using GalaSoft.MvvmLight.CommandWpf;
+using System.Windows;
 
 namespace HearMe.ViewModels
 {
@@ -22,6 +24,7 @@ namespace HearMe.ViewModels
         public DelegateCommand OpenPlaylistCommand { get; private set; }
         public DelegateCommand SavePlaylistCommand { get; private set; }
         public DelegateCommand ClearPlaylistCommand { get; private set; }
+        public RelayCommand<DragEventArgs> DropCommand { get; private set; }
 
         public PlayerViewModel(MainWindow view)
         {
@@ -41,6 +44,15 @@ namespace HearMe.ViewModels
             OpenPlaylistCommand = new DelegateCommand(OpenPlaylist, null);
             SavePlaylistCommand = new DelegateCommand(SavePlaylist, null);
             ClearPlaylistCommand = new DelegateCommand(ClearPlaylist, null);
+            DropCommand = new RelayCommand<DragEventArgs>((e) => AddToPlaylist(e), (e) => true);
+        }
+
+        public void AddToPlaylist(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                AddFilesToPlaylist((string[])e.Data.GetData(DataFormats.FileDrop));
+            }
         }
 
         void ClearPlaylist(object arg)
