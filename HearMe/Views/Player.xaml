@@ -15,15 +15,19 @@
     <Canvas Background="#202020" AllowDrop="True">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Drop">
-                <cmd:EventToCommand Command="{Binding DropCommand}"
-                        PassEventArgsToCommand="True" />
+                <cmd:EventToCommand Command="{Binding DropCommand}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
         <Canvas Background="#ffffff" Name="canvasPlaylist" Canvas.Left="-300" Canvas.Top="0" Height="400" Width="300" Panel.ZIndex="10">
             <Canvas.RenderTransform>
                 <TranslateTransform x:Name="slideToggle"/>
             </Canvas.RenderTransform>
-            <ListBox AlternationCount="2" KeyDown="DeleteSelectedFile" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="350" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="15">
+            <ListBox AlternationCount="2" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="350" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="15">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyDown">
+                        <cmd:EventToCommand Command="{Binding DeleteSelectedCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
@@ -76,7 +80,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="{x:Type ListBoxItem}">
+        <Style x:Key="ZebraStripe" TargetType="{x:Type ListBoxItem}">
             <Style.Triggers>
                 <Trigger Property="ItemsControl.AlternationIndex" Value="0">
                     <Setter Property="Background" Value="#e7e7e7"></Setter>

@@ -28,8 +28,9 @@ namespace HearMe
 
             DataContext = _viewModel;
 
-            _timer = new System.Timers.Timer();
-            _timer.Interval = 300;
+            _timer = new System.Timers.Timer {
+                Interval = 300
+            };
             _timer.Elapsed += _viewModel.UpdateBoundData;
 
             Closing += OnWindowClosing;
@@ -52,14 +53,6 @@ namespace HearMe
         private void Window_Close(object sender, RoutedEventArgs e)
         {
             this.Close();
-        }
-
-        private void DeleteSelectedFile(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Delete || e.Key == Key.Back)
-            {
-                _viewModel.RemoveFromPlaylist(playlist.SelectedItems);
-            }
         }
 
         private void PlaySongFromPlaylist(object sender, MouseButtonEventArgs e)
@@ -109,8 +102,7 @@ namespace HearMe
         private void GoToPosition(object sender, DragCompletedEventArgs e)
         {
             if (!dragStarted) return;
-
-            // set position
+            
             _viewModel.SetPosition(new TimeSpan(0, (int)(Math.Floor(seekBar.Value / 60)), (int)(Math.Floor(seekBar.Value % 60))));            
 
             dragStarted = false;

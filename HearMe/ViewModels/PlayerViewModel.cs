@@ -10,6 +10,8 @@ using System.Linq;
 using PlaylistsNET.Models;
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Windows;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace HearMe.ViewModels
 {
@@ -24,7 +26,9 @@ namespace HearMe.ViewModels
         public DelegateCommand OpenPlaylistCommand { get; private set; }
         public DelegateCommand SavePlaylistCommand { get; private set; }
         public DelegateCommand ClearPlaylistCommand { get; private set; }
+
         public RelayCommand<DragEventArgs> DropCommand { get; private set; }
+        public RelayCommand<KeyEventArgs> DeleteSelectedCommand { get; private set; }
 
         public PlayerViewModel(MainWindow view)
         {
@@ -44,7 +48,18 @@ namespace HearMe.ViewModels
             OpenPlaylistCommand = new DelegateCommand(OpenPlaylist, null);
             SavePlaylistCommand = new DelegateCommand(SavePlaylist, null);
             ClearPlaylistCommand = new DelegateCommand(ClearPlaylist, null);
+
             DropCommand = new RelayCommand<DragEventArgs>((e) => AddToPlaylist(e), (e) => true);
+            DeleteSelectedCommand = new RelayCommand<KeyEventArgs>((e) => DeleteSelectedFile(e), (e) => true);
+        }
+
+        private void DeleteSelectedFile(KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete || e.Key == Key.Back)
+            {
+                ListBox playlistListBox = (ListBox)e.Source;
+                RemoveFromPlaylist(playlistListBox.SelectedItems);
+            }
         }
 
         public void AddToPlaylist(DragEventArgs e)
