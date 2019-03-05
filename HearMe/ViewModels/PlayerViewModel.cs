@@ -20,6 +20,8 @@ namespace HearMe.ViewModels
         AudioPlayer audioPlayer;
         MainWindow PlayerView;
 
+        private System.Timers.Timer _timer;
+
         public DelegateCommand NextCommand { get; private set; }
         public DelegateCommand PreviousCommand { get; private set; }
         public DelegateCommand StopCommand { get; private set; }
@@ -51,6 +53,13 @@ namespace HearMe.ViewModels
 
             DropCommand = new RelayCommand<DragEventArgs>((e) => AddToPlaylist(e), (e) => true);
             DeleteSelectedCommand = new RelayCommand<KeyEventArgs>((e) => DeleteSelectedFile(e), (e) => true);
+
+            _timer = new System.Timers.Timer
+            {
+                Interval = 300
+            };
+
+            _timer.Elapsed += UpdateBoundData;
         }
 
         private void DeleteSelectedFile(KeyEventArgs e)
@@ -236,6 +245,8 @@ namespace HearMe.ViewModels
             PlayingSongLength = TotalTime.TotalSeconds;
 
             audioPlayer.OutputDevice.Volume = Volume;
+
+            _timer.Start();
             
         }
 
@@ -301,16 +312,16 @@ namespace HearMe.ViewModels
             }
 
             audioPlayer.OutputDevice.Volume = Volume;
-
             audioPlayer.Play();
+            _timer.Start();
         }
 
         public void Stop()
         {
-
             if (audioPlayer != null)
             {
                 audioPlayer.Stop();
+                _timer.Stop();
             }
         }
 

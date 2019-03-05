@@ -17,7 +17,6 @@ namespace HearMe
     public partial class MainWindow : Window
     {
         private PlayerViewModel _viewModel;
-        private System.Timers.Timer _timer;
 
         public MainWindow()
         {
@@ -27,11 +26,6 @@ namespace HearMe
 
             DataContext = _viewModel;
 
-            _timer = new System.Timers.Timer {
-                Interval = 300
-            };
-            _timer.Elapsed += _viewModel.UpdateBoundData;
-
             Closing += OnWindowClosing;
         }
 
@@ -39,7 +33,6 @@ namespace HearMe
         {
             _viewModel.UnbindOnStopEvent();
             _viewModel.Stop();
-            _timer.Dispose();
             _viewModel.Dispose();
         }
 
@@ -59,13 +52,11 @@ namespace HearMe
             ListBoxItem clickedSong = (ListBoxItem)sender;
 
             _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((M3uPlaylistEntry)clickedSong.Content));
-            _timer.Start();
         }
 
         private void Play(object sender, RoutedEventArgs e)
         {
             _viewModel.Play();
-            _timer.Start();
         }
 
         private void ShowPlaylist(object sender, RoutedEventArgs e)
