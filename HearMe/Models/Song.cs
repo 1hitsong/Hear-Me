@@ -63,7 +63,7 @@ namespace HearMe
             BitmapImage tmp = new BitmapImage();
 
             string[] validImageTypes = { ".jpg", ".jpeg", ".gif", ".png" };
-            string[] validFileNames = { "album", "default", "index", "cover" };
+            string[] validFileNames = { "album", "default", "index", "cover", "folder" };
 
             List<string> imageFiles = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.*", SearchOption.TopDirectoryOnly)
                   .Where(file => validImageTypes.Contains(Path.GetExtension(file)) && validFileNames.Contains(Path.GetFileNameWithoutExtension(file)))
