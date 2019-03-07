@@ -66,7 +66,7 @@ namespace HearMe
             string[] validFileNames = { "album", "default", "index", "cover", "folder" };
 
             List<string> imageFiles = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.*", SearchOption.TopDirectoryOnly)
-                  .Where(file => validImageTypes.Contains(Path.GetExtension(file)) && validFileNames.Contains(Path.GetFileNameWithoutExtension(file)))
+                  .Where(file => validImageTypes.Contains(Path.GetExtension(file).ToLower()) && validFileNames.Contains(Path.GetFileNameWithoutExtension(file).ToLower()))
                   .ToList();
 
             if (imageFiles.Any())

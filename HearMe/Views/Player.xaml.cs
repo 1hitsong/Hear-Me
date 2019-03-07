@@ -54,11 +54,6 @@ namespace HearMe
             _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((M3uPlaylistEntry)clickedSong.Content));
         }
 
-        private void Play(object sender, RoutedEventArgs e)
-        {
-            _viewModel.Play();
-        }
-
         private void ShowPlaylist(object sender, RoutedEventArgs e)
         {
             DoubleAnimation db = new DoubleAnimation

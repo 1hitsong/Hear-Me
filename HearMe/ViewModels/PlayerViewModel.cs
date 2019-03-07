@@ -20,11 +20,23 @@ namespace HearMe.ViewModels
         AudioPlayer audioPlayer;
         MainWindow PlayerView;
 
+        private string _keyValue;
+        public string KeyValue
+        {
+            get { return _keyValue; }
+            set
+            {
+                _keyValue = value;
+                OnPropertyChanged("KeyValue");
+            }
+        }
+
         private System.Timers.Timer _timer;
 
         public DelegateCommand NextCommand { get; private set; }
         public DelegateCommand PreviousCommand { get; private set; }
         public DelegateCommand StopCommand { get; private set; }
+        public DelegateCommand PlayCommand { get; private set; }
         public DelegateCommand OpenPlaylistCommand { get; private set; }
         public DelegateCommand SavePlaylistCommand { get; private set; }
         public DelegateCommand ClearPlaylistCommand { get; private set; }
@@ -47,6 +59,7 @@ namespace HearMe.ViewModels
             NextCommand = new DelegateCommand(Next, null);
             PreviousCommand = new DelegateCommand(Previous, null);
             StopCommand = new DelegateCommand(Stop, null);
+            PlayCommand = new DelegateCommand(Play, null);
             OpenPlaylistCommand = new DelegateCommand(OpenPlaylist, null);
             SavePlaylistCommand = new DelegateCommand(SavePlaylist, null);
             ClearPlaylistCommand = new DelegateCommand(ClearPlaylist, null);
@@ -82,6 +95,7 @@ namespace HearMe.ViewModels
         void ClearPlaylist(object arg)
         {
             Playlist.Clear();
+            PlayingSongPlaylistIndex = -1;
         }
 
         void SavePlaylist(object arg)
@@ -102,6 +116,11 @@ namespace HearMe.ViewModels
         void Previous(object arg)
         {
             MovePlaylistSong(-1);
+        }
+
+        void Play(object arg)
+        {
+            Play();
         }
 
         void Stop(object arg)
@@ -378,6 +397,9 @@ namespace HearMe.ViewModels
         {
            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {
+                //Console.WriteLine(e.KeyboardData.);
+                KeyValue = e.KeyboardData.VirtualCode.ToString();
+
                 int[] validKeys = new int[] {GlobalKeyboardHook.VkMediaNext, GlobalKeyboardHook.VkMediaPrevious, GlobalKeyboardHook.VkMediaPlay};
 
                 if (!validKeys.Contains(e.KeyboardData.VirtualCode))
@@ -393,6 +415,9 @@ namespace HearMe.ViewModels
 
                 if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaPlay)
                 {
+                    if (audioPlayer == null)
+                        return;
+
                     if (audioPlayer.IsPlaying())
                     {
                         Stop();
