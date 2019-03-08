@@ -15,55 +15,26 @@ using System.Windows.Controls;
 
 namespace HearMe.ViewModels
 {
-    class PlayerViewModel : IDisposable, INotifyPropertyChanged
+    class PlayerViewModel : GalaSoft.MvvmLight.ObservableObject, IDisposable
     {
-        AudioPlayer audioPlayer;
-        MainWindow PlayerView;
-
-        private string _keyValue;
-        public string KeyValue
-        {
-            get { return _keyValue; }
-            set
-            {
-                _keyValue = value;
-                OnPropertyChanged("KeyValue");
-            }
-        }
-
-        private System.Timers.Timer _timer;
-
-        public DelegateCommand NextCommand { get; private set; }
-        public DelegateCommand PreviousCommand { get; private set; }
-        public DelegateCommand StopCommand { get; private set; }
-        public DelegateCommand PlayCommand { get; private set; }
-        public DelegateCommand OpenPlaylistCommand { get; private set; }
-        public DelegateCommand SavePlaylistCommand { get; private set; }
-        public DelegateCommand ClearPlaylistCommand { get; private set; }
-
-        public RelayCommand<DragEventArgs> DropCommand { get; private set; }
-        public RelayCommand<KeyEventArgs> DeleteSelectedCommand { get; private set; }
-
-        public PlayerViewModel(MainWindow view)
+        public PlayerViewModel()
         {
             NavigationRequest += HandleNavigationRequest;
 
             DataUpdateRequest += UpdatePlayingSongPosition;
             DataUpdateRequest += UpdatePlayingSongDisplayText;
 
-            PlayerView = view;
             Playlist = new Playlist();
 
             SetupKeyboardHooks();
 
-            NextCommand = new DelegateCommand(Next, null);
-            PreviousCommand = new DelegateCommand(Previous, null);
-            StopCommand = new DelegateCommand(Stop, null);
-            PlayCommand = new DelegateCommand(Play, null);
-            OpenPlaylistCommand = new DelegateCommand(OpenPlaylist, null);
-            SavePlaylistCommand = new DelegateCommand(SavePlaylist, null);
-            ClearPlaylistCommand = new DelegateCommand(ClearPlaylist, null);
-
+            NextCommand = new RelayCommand(() => MovePlaylistSong(1));
+            PreviousCommand = new RelayCommand(() => MovePlaylistSong(-1));
+            StopCommand = new RelayCommand(() => Stop());
+            PlayCommand = new RelayCommand(() => Play());
+            OpenPlaylistCommand = new RelayCommand(() => Playlist.Open());
+            SavePlaylistCommand = new RelayCommand(() => Playlist.Save());
+            ClearPlaylistCommand = new RelayCommand(() => ClearPlaylist());
             DropCommand = new RelayCommand<DragEventArgs>((e) => AddToPlaylist(e), (e) => true);
             DeleteSelectedCommand = new RelayCommand<KeyEventArgs>((e) => DeleteSelectedFile(e), (e) => true);
 
@@ -75,60 +46,16 @@ namespace HearMe.ViewModels
             _timer.Elapsed += UpdateBoundData;
         }
 
-        private void DeleteSelectedFile(KeyEventArgs e)
+        private string _keyValue;
+        public string KeyValue
         {
-            if (e.Key == Key.Delete || e.Key == Key.Back)
+            get { return _keyValue; }
+            set
             {
-                ListBox playlistListBox = (ListBox)e.Source;
-                RemoveFromPlaylist(playlistListBox.SelectedItems);
+                _keyValue = value;
+                RaisePropertyChanged("KeyValue");
             }
         }
-
-        public void AddToPlaylist(DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                AddFilesToPlaylist((string[])e.Data.GetData(DataFormats.FileDrop));
-            }
-        }
-
-        void ClearPlaylist(object arg)
-        {
-            Playlist.Clear();
-            PlayingSongPlaylistIndex = -1;
-        }
-
-        void SavePlaylist(object arg)
-        {
-            Playlist.Save();
-        }
-
-        void OpenPlaylist(object arg)
-        {
-            Playlist.Open();
-        }
-
-        void Next(object arg)
-        {
-            MovePlaylistSong(1);
-        }
-
-        void Previous(object arg)
-        {
-            MovePlaylistSong(-1);
-        }
-
-        void Play(object arg)
-        {
-            Play();
-        }
-
-        void Stop(object arg)
-        {
-            Stop();
-        }
-
-        private int PlayingSongPlaylistIndex { get; set; }
 
         private string _playingsongTitle;
         public string PlayingSongTitle
@@ -137,7 +64,7 @@ namespace HearMe.ViewModels
             set
             {
                 _playingsongTitle = value;
-                OnPropertyChanged("PlayingSongTitle");
+                RaisePropertyChanged("PlayingSongTitle");
             }
         }
 
@@ -148,7 +75,7 @@ namespace HearMe.ViewModels
             set
             {
                 _albumArt = value;
-                OnPropertyChanged("AlbumArt");
+                RaisePropertyChanged("AlbumArt");
             }
         }
 
@@ -159,7 +86,7 @@ namespace HearMe.ViewModels
             set
             {
                 _playingsongLength = value;
-                OnPropertyChanged("PlayingSongLength");
+                RaisePropertyChanged("PlayingSongLength");
             }
         }
 
@@ -179,12 +106,12 @@ namespace HearMe.ViewModels
             get { return _volume; }
             set
             {
-                if(_volume != value)
+                if (_volume != value)
                 {
                     SetVolume(value);
                     _volume = value;
-                    OnPropertyChanged("Volume");
-                } 
+                    RaisePropertyChanged("Volume");
+                }
             }
         }
 
@@ -205,30 +132,57 @@ namespace HearMe.ViewModels
             set
             {
                 _displayText = value;
-                OnPropertyChanged("DisplayText");
+                RaisePropertyChanged("DisplayText");
             }
         }
 
+        private int PlayingSongPlaylistIndex { get; set; }
         public Playlist Playlist { get; set; }
+
+        public RelayCommand NextCommand { get; private set; }
+        public RelayCommand PreviousCommand { get; private set; }
+        public RelayCommand StopCommand { get; private set; }
+        public RelayCommand PlayCommand { get; private set; }
+        public RelayCommand OpenPlaylistCommand { get; private set; }
+        public RelayCommand SavePlaylistCommand { get; private set; }
+        public RelayCommand ClearPlaylistCommand { get; private set; }
+        public RelayCommand<DragEventArgs> DropCommand { get; private set; }
+        public RelayCommand<KeyEventArgs> DeleteSelectedCommand { get; private set; }
+
+        AudioPlayer audioPlayer;
+        private GlobalKeyboardHook _globalKeyboardHook;
+        private System.Timers.Timer _timer;
 
         public event EventHandler<NavigationEventArgs> NavigationRequest;
         public event EventHandler<EventArgs> DataUpdateRequest;
 
-
-        public void AddFilesToPlaylist(string[] filesToAdd)
+        private void DeleteSelectedFile(KeyEventArgs e)
         {
-            Playlist.Add(filesToAdd);
+            if (e.Key == Key.Delete || e.Key == Key.Back)
+            {
+                ListBox playlistListBox = (ListBox)e.Source;
+                Playlist.Remove(playlistListBox.SelectedItems);
+            }
+        }
+
+        public void AddToPlaylist(DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                Playlist.Add((string[])e.Data.GetData(DataFormats.FileDrop));
+            }
+        }
+
+        void ClearPlaylist()
+        {
+            Playlist.Clear();
+            PlayingSongPlaylistIndex = -1;
         }
 
         public void UnbindOnStopEvent()
         {
             if (audioPlayer != null)
                 audioPlayer.OutputDevice.Stopped -= PlaybackDevicePlaybackStopped;
-        }
-
-        public void RemoveFromPlaylist(System.Collections.IList selectedSongs)
-        {
-            Playlist.Remove(selectedSongs);
         }
 
         public void PlayFile(int playlistIndex)
@@ -277,7 +231,7 @@ namespace HearMe.ViewModels
         public void UpdatePlayingSongPosition(object sender, EventArgs e)
         {
             _playingsongPosition = CurrentTime.TotalSeconds;
-            OnPropertyChanged("PlayingSongPosition");
+            RaisePropertyChanged("PlayingSongPosition");
         }
 
         private void UpdatePlayingSongDisplayText(object sender, EventArgs e)
@@ -360,7 +314,6 @@ namespace HearMe.ViewModels
         {
             AlbumArt = Song.GetAlbumArt(playingSong.Path);
             PlayingSongTitle = playingSong.AlbumArtist + "-" + playingSong.Title;
-            PlayerView.Title = PlayingSongTitle;
         }
 
         public void Dispose()
@@ -385,7 +338,6 @@ namespace HearMe.ViewModels
             audioPlayer = null;
         }
 
-        private GlobalKeyboardHook _globalKeyboardHook;
 
         public void SetupKeyboardHooks()
         {
@@ -397,7 +349,6 @@ namespace HearMe.ViewModels
         {
            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {
-                //Console.WriteLine(e.KeyboardData.);
                 KeyValue = e.KeyboardData.VirtualCode.ToString();
 
                 int[] validKeys = new int[] {GlobalKeyboardHook.VkMediaNext, GlobalKeyboardHook.VkMediaPrevious, GlobalKeyboardHook.VkMediaPlay};
@@ -431,17 +382,5 @@ namespace HearMe.ViewModels
                 e.Handled = true;
             }
         }
-
-        #region INotifyPropertyChanged Implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string name)
-        {
-            var handler = System.Threading.Interlocked.CompareExchange(ref PropertyChanged, null, null);
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-        #endregion
     }
 }

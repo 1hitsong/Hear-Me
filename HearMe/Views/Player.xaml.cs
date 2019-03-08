@@ -20,7 +20,7 @@ namespace HearMe
 
         public MainWindow()
         {
-            _viewModel = new PlayerViewModel(this);
+            _viewModel = new PlayerViewModel();
 
             InitializeComponent();
 

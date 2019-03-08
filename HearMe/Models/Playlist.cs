@@ -11,7 +11,7 @@ using PlaylistsNET.Models;
 
 namespace HearMe.Models
 {
-    class Playlist : INotifyPropertyChanged
+    class Playlist : GalaSoft.MvvmLight.ObservableObject
     {
 
         private ObservableCollection<M3uPlaylistEntry> _files;
@@ -21,7 +21,7 @@ namespace HearMe.Models
             set
             {
                 _files = value;
-                OnPropertyChanged("Files");
+                RaisePropertyChanged("Files");
             }
         }
 
@@ -144,17 +144,5 @@ namespace HearMe.Models
         {
             return index < Files.Count() ? Files.ElementAt(index) : null;
         }
-
-        #region INotifyPropertyChanged Implementation
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string name)
-        {
-            var handler = System.Threading.Interlocked.CompareExchange(ref PropertyChanged, null, null);
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-        #endregion
     }
 }

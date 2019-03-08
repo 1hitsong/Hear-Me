@@ -11,7 +11,7 @@
         AllowsTransparency="True"
         Background="White"
         BorderBrush="LightGray" BorderThickness="1"
-        Title="Hear Me" Height="400" Width="300">
+        Title="{Binding PlayingSongTitle}" Height="400" Width="300">
     <Canvas Background="#202020" AllowDrop="True">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Drop">
