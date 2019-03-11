@@ -9,20 +9,33 @@
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="White"
-        BorderBrush="LightGray" BorderThickness="1"
-        Title="{Binding PlayingSongTitle}" Height="400" Width="300">
-    <Canvas Background="#202020" AllowDrop="True">
+        Background="Transparent"
+        Title="{Binding PlayingSongTitle}" Height="400" Width="350">
+    <Canvas Background="#202020" AllowDrop="True" Height="400" Width="300" HorizontalAlignment="Left">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Drop">
                 <cmd:EventToCommand Command="{Binding DropCommand}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <Canvas Background="#ffffff" Name="canvasPlaylist" Canvas.Left="-300" Canvas.Top="0" Height="400" Width="300" Panel.ZIndex="10">
-            <Canvas.RenderTransform>
-                <TranslateTransform x:Name="slideToggle"/>
-            </Canvas.RenderTransform>
-            <ListBox AlternationCount="2" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="350" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="15">
+        <Canvas Name="canvasPlayer">
+            <Image x:Name="cover" Source="{Binding AlbumArt}" MouseDown="Window_MouseDown" HorizontalAlignment="Left" Height="160" VerticalAlignment="Top" Width="298" Stretch="UniformToFill"/>
+            <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="30" Height="30" HorizontalAlignment="Center" Click="Window_Close" FontFamily="Segoe UI Semibold" Foreground="#f7f7f7" Panel.ZIndex="5" FontSize="18" Canvas.Left="268" FontWeight="Bold" >
+                <Button.Effect>
+                    <DropShadowEffect BlurRadius="1" ShadowDepth="2"/>
+                </Button.Effect>
+            </Button>
+            <Button Style="{DynamicResource RoundButtonStyle}" x:Name="previousButton" Command="{Binding PreviousCommand}" Content="&lt;&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="30" Canvas.Left="249" Canvas.Top="147" Panel.ZIndex="9"/>
+            <Button Style="{DynamicResource RoundButtonStyle}" x:Name="nextButton" Command="{Binding NextCommand}" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="30" Canvas.Left="294" Canvas.Top="147" Panel.ZIndex="9"/>
+            <Button Style="{DynamicResource RoundButtonStyle}" x:Name="playButton" Command="{Binding PlayCommand}" Content="{Binding PlayButtonIcon}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="50" Canvas.Left="260" Canvas.Top="109" FontSize="16" Panel.ZIndex="10">
+                <Button.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="10"/>
+                </Button.Effect>
+            </Button>
+            <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Canvas.Left="10" Canvas.Top="186"/>
+            <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Canvas.Left="202" Canvas.Top="186" Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Maximum="1" LargeChange="0.1"/>
+            <Label Visibility="Hidden" x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Foreground="White" Canvas.Top="312" Canvas.Left="150"/>
+
+            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="2" Background="Transparent" Foreground="white" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="145" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="220">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="KeyDown">
                         <cmd:EventToCommand Command="{Binding DeleteSelectedCommand}" PassEventArgsToCommand="True" />
@@ -31,9 +44,9 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                            <Label Content="{Binding AlbumArtist}" />
-                            <Label>-</Label>
-                            <Label Content="{Binding Title}" />
+                            <Label Foreground="White" Content="{Binding AlbumArtist}" />
+                            <Label Foreground="White">-</Label>
+                            <Label Foreground="White" Content="{Binding Title}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -43,29 +56,50 @@
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" x:Name="openPlaylist" Command="{Binding OpenPlaylistCommand}" Content="Open" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" Canvas.Left="15" Canvas.Top="370"/>
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" Command="{Binding ClearPlaylistCommand}" Canvas.Left="245" Canvas.Top="370"/>
-            <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="HidePlaylist" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#202020" />
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" x:Name="savePlaylist" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#202020" Height="25" Command="{Binding SavePlaylistCommand}" Canvas.Left="65" Canvas.Top="370"/>
-        </Canvas>
-        <Canvas Name="canvasPlayer">
-            <Button Click="ShowPlaylist" Style="{DynamicResource FlatButtonStyle}" x:Name="button" Content="PL" Width="30" Canvas.Left="10" Canvas.Top="24"/>
-            <Image x:Name="cover" Source="{Binding AlbumArt}" HorizontalAlignment="Left" Height="207" VerticalAlignment="Top" Width="207" Canvas.Left="45" Canvas.Top="45"/>
-            <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="20" Height="20" HorizontalAlignment="Left" Click="Window_Close" Margin="278,0,0,378" FontFamily="Segoe UI Light" Foreground="#f7f7f7" Panel.ZIndex="5" />
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="previousButton" Command="{Binding PreviousCommand}" Content="&lt;&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Canvas.Left="20" Canvas.Top="340"/>
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="stopButton" Command="{Binding StopCommand}" Content="&#9724;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Canvas.Left="160" Canvas.Top="340"/>
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="playButton" Command="{Binding PlayCommand}" Content="&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Canvas.Left="60" Canvas.Top="340"/>
-            <Button Style="{DynamicResource FlatButtonStyle}" x:Name="nextButton" Command="{Binding NextCommand}" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Canvas.Left="250" Canvas.Top="340"/>
-            <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Canvas.Left="10" Canvas.Top="292"/>
-            <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Canvas.Left="202" Canvas.Top="292" Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Maximum="1" LargeChange="0.1"/>
-            <Label x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Foreground="White" Canvas.Top="312" Canvas.Left="150"/>
-            <Label x:Name="songTitle" Content="{Binding PlayingSongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,250,0,0" Foreground="White"/>
-            <Rectangle Fill="Azure" Height="20" Width="155" MouseDown="Window_MouseDown" Panel.ZIndex="1" Canvas.Left="80"/>
-            <Label x:Name="KeyDownHelper" Foreground="White" Content="{Binding KeyValue}" Canvas.Left="45" Canvas.Top="25"/>
+            <Button Style="{DynamicResource SmallButtonStyle}" x:Name="openPlaylist" Command="{Binding OpenPlaylistCommand}" Content="Open" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Canvas.Left="15" Canvas.Top="370"/>
+            <Button Style="{DynamicResource SmallButtonStyle}" x:Name="clearPlaylist" Content="Clear" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Command="{Binding ClearPlaylistCommand}" Canvas.Left="245" Canvas.Top="370"/>
+            <Button Style="{DynamicResource SmallButtonStyle}" x:Name="savePlaylist" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Height="25" Command="{Binding SavePlaylistCommand}" Canvas.Left="65" Canvas.Top="370"/>
+
+            <Label x:Name="songArtist" Content="{Binding PlayingSongArtist}" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Canvas.Left="5" Canvas.Top="115" Height="34" Width="253" FontSize="14" FontWeight="Bold" Panel.ZIndex="6" />
+            <Label x:Name="songTitle" Content="{Binding PlayingSongTitle}" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" Canvas.Left="5" Canvas.Top="135" Height="24" Width="253" FontSize="11" Panel.ZIndex="6" />
+            <Rectangle Fill="#000000" Opacity=".8" Height="45" Width="313" Canvas.Left="-15" Canvas.Top="115" Panel.ZIndex="5"/>
         </Canvas>
     </Canvas>
 
     <Window.Resources>
+        <Style TargetType="Button" x:Key="RoundButtonStyle">
+            <Setter Property="Background" Value="DarkCyan"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse Fill="{TemplateBinding Background}"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="SmallButtonStyle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="Button" x:Key="FlatButtonStyle">
             <Setter Property="Background" Value="DarkCyan"/>
             <Setter Property="Foreground" Value="White"/>

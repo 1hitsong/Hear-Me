@@ -53,29 +53,5 @@ namespace HearMe
 
             _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((M3uPlaylistEntry)clickedSong.Content));
         }
-
-        private void ShowPlaylist(object sender, RoutedEventArgs e)
-        {
-            DoubleAnimation db = new DoubleAnimation
-            {
-                Duration = TimeSpan.FromSeconds(.3),
-                From = -this.Left,
-                To = this.Width
-            };
-
-            slideToggle.BeginAnimation(TranslateTransform.XProperty, db);
-        }
-
-        private void HidePlaylist(object sender, RoutedEventArgs e)
-        {
-            DoubleAnimation db = new DoubleAnimation
-            {
-                Duration = TimeSpan.FromSeconds(.3),
-                To = -this.Left,
-                From = this.Width
-            };
-
-            slideToggle.BeginAnimation(TranslateTransform.XProperty, db);
-        }
     }
 }

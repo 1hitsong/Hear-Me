@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Net;
 
 namespace HearMe.ViewModels
 {
@@ -22,7 +23,9 @@ namespace HearMe.ViewModels
             NavigationRequest += HandleNavigationRequest;
 
             DataUpdateRequest += UpdatePlayingSongPosition;
-            DataUpdateRequest += UpdatePlayingSongDisplayText;
+
+            // Disabled for now as it is not displayed
+            // DataUpdateRequest += UpdatePlayingSongDisplayText;
 
             Playlist = new Playlist();
 
@@ -31,7 +34,7 @@ namespace HearMe.ViewModels
             NextCommand = new RelayCommand(() => MovePlaylistSong(1));
             PreviousCommand = new RelayCommand(() => MovePlaylistSong(-1));
             StopCommand = new RelayCommand(() => Stop());
-            PlayCommand = new RelayCommand(() => Play());
+            PlayCommand = new RelayCommand(() => TogglePlay());
             OpenPlaylistCommand = new RelayCommand(() => Playlist.Open());
             SavePlaylistCommand = new RelayCommand(() => Playlist.Save());
             ClearPlaylistCommand = new RelayCommand(() => ClearPlaylist());
@@ -46,14 +49,14 @@ namespace HearMe.ViewModels
             _timer.Elapsed += UpdateBoundData;
         }
 
-        private string _keyValue;
-        public string KeyValue
+        private string _playButtonIcon;
+        public string PlayButtonIcon
         {
-            get { return _keyValue; }
+            get { return _playButtonIcon; }
             set
             {
-                _keyValue = value;
-                RaisePropertyChanged("KeyValue");
+                _playButtonIcon = value;
+                RaisePropertyChanged("PlayButtonIcon");
             }
         }
 
@@ -65,6 +68,17 @@ namespace HearMe.ViewModels
             {
                 _playingsongTitle = value;
                 RaisePropertyChanged("PlayingSongTitle");
+            }
+        }
+
+        private string _playingsongArtist;
+        public string PlayingSongArtist
+        {
+            get { return _playingsongArtist; }
+            set
+            {
+                _playingsongArtist = value;
+                RaisePropertyChanged("PlayingSongArtist");
             }
         }
 
@@ -156,6 +170,21 @@ namespace HearMe.ViewModels
         public event EventHandler<NavigationEventArgs> NavigationRequest;
         public event EventHandler<EventArgs> DataUpdateRequest;
 
+        private void TogglePlay()
+        {
+            if (audioPlayer == null)
+                return;
+
+            if (audioPlayer.IsPlaying())
+            {
+                Stop();
+            }
+            else
+            {
+                Play();
+            }
+        }
+
         private void DeleteSelectedFile(KeyEventArgs e)
         {
             if (e.Key == Key.Delete || e.Key == Key.Back)
@@ -212,6 +241,8 @@ namespace HearMe.ViewModels
 
             audioPlayer = new AudioPlayer(@fileLocation);
             audioPlayer.Play();
+
+            PlayButtonIcon = WebUtility.HtmlDecode("&#9724;");
 
             audioPlayer.OutputDevice.Stopped += PlaybackDevicePlaybackStopped;
 
@@ -286,6 +317,7 @@ namespace HearMe.ViewModels
 
             audioPlayer.OutputDevice.Volume = Volume;
             audioPlayer.Play();
+            PlayButtonIcon = WebUtility.HtmlDecode("&#9724;"); 
             _timer.Start();
         }
 
@@ -294,6 +326,7 @@ namespace HearMe.ViewModels
             if (audioPlayer != null)
             {
                 audioPlayer.Stop();
+                PlayButtonIcon = WebUtility.HtmlDecode("&#10095;");
                 _timer.Stop();
             }
         }
@@ -313,7 +346,8 @@ namespace HearMe.ViewModels
         public void UpdateSongInformationDisplay(M3uPlaylistEntry playingSong)
         {
             AlbumArt = Song.GetAlbumArt(playingSong.Path);
-            PlayingSongTitle = playingSong.AlbumArtist + "-" + playingSong.Title;
+            PlayingSongArtist = playingSong.AlbumArtist;
+            PlayingSongTitle = playingSong.Title;
         }
 
         public void Dispose()
@@ -349,7 +383,6 @@ namespace HearMe.ViewModels
         {
            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {
-                KeyValue = e.KeyboardData.VirtualCode.ToString();
 
                 int[] validKeys = new int[] {GlobalKeyboardHook.VkMediaNext, GlobalKeyboardHook.VkMediaPrevious, GlobalKeyboardHook.VkMediaPlay};
 
