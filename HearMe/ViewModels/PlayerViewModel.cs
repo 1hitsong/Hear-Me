@@ -35,6 +35,7 @@ namespace HearMe.ViewModels
             PreviousCommand = new RelayCommand(() => MovePlaylistSong(-1));
             StopCommand = new RelayCommand(() => Stop());
             PlayCommand = new RelayCommand(() => TogglePlay());
+            WindowCloseCommand = new RelayCommand<Window>((e) => WindowClose(e), (e) => true);
             OpenPlaylistCommand = new RelayCommand(() => Playlist.Open());
             SavePlaylistCommand = new RelayCommand(() => Playlist.Save());
             ClearPlaylistCommand = new RelayCommand(() => ClearPlaylist());
@@ -154,6 +155,7 @@ namespace HearMe.ViewModels
         public Playlist Playlist { get; set; }
 
         public RelayCommand NextCommand { get; private set; }
+        public RelayCommand<Window> WindowCloseCommand { get; private set; }
         public RelayCommand PreviousCommand { get; private set; }
         public RelayCommand StopCommand { get; private set; }
         public RelayCommand PlayCommand { get; private set; }
@@ -169,6 +171,11 @@ namespace HearMe.ViewModels
 
         public event EventHandler<NavigationEventArgs> NavigationRequest;
         public event EventHandler<EventArgs> DataUpdateRequest;
+
+        private void WindowClose(Window e)
+        {
+            e.Close();
+        }
 
         private void TogglePlay()
         {
@@ -242,7 +249,7 @@ namespace HearMe.ViewModels
             audioPlayer = new AudioPlayer(@fileLocation);
             audioPlayer.Play();
 
-            PlayButtonIcon = WebUtility.HtmlDecode("&#9724;");
+            PlayButtonIcon = "M18,18H6V6H18V18Z";
 
             audioPlayer.OutputDevice.Stopped += PlaybackDevicePlaybackStopped;
 
@@ -317,7 +324,7 @@ namespace HearMe.ViewModels
 
             audioPlayer.OutputDevice.Volume = Volume;
             audioPlayer.Play();
-            PlayButtonIcon = WebUtility.HtmlDecode("&#9724;"); 
+            PlayButtonIcon = "M18,18H6V6H18V18Z"; 
             _timer.Start();
         }
 
@@ -326,7 +333,7 @@ namespace HearMe.ViewModels
             if (audioPlayer != null)
             {
                 audioPlayer.Stop();
-                PlayButtonIcon = WebUtility.HtmlDecode("&#10095;");
+                PlayButtonIcon = "M8,5.14V19.14L19,12.14L8,5.14Z";
                 _timer.Stop();
             }
         }

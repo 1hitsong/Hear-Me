@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
 using PlaylistsNET.Models;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace HearMe
 {
@@ -40,11 +41,6 @@ namespace HearMe
         {
             if (e.ChangedButton == MouseButton.Left)
                 this.DragMove();
-        }
-
-        private void Window_Close(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private void PlaySongFromPlaylist(object sender, MouseButtonEventArgs e)

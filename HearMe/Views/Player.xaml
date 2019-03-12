@@ -6,10 +6,14 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         xmlns:local="clr-namespace:HearMe"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
+        Name="ProgramWindow"
         Title="{Binding PlayingSongTitle}" Height="400" Width="350">
     <Canvas Background="#202020" AllowDrop="True" Height="400" Width="300" HorizontalAlignment="Left">
         <i:Interaction.Triggers>
@@ -18,24 +22,43 @@
             </i:EventTrigger>
         </i:Interaction.Triggers>
         <Canvas Name="canvasPlayer">
-            <Image x:Name="cover" Source="{Binding AlbumArt}" MouseDown="Window_MouseDown" HorizontalAlignment="Left" Height="160" VerticalAlignment="Top" Width="298" Stretch="UniformToFill"/>
-            <Button BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Content="X" Width="30" Height="30" HorizontalAlignment="Center" Click="Window_Close" FontFamily="Segoe UI Semibold" Foreground="#f7f7f7" Panel.ZIndex="5" FontSize="18" Canvas.Left="268" FontWeight="Bold" >
-                <Button.Effect>
-                    <DropShadowEffect BlurRadius="1" ShadowDepth="2"/>
-                </Button.Effect>
+            <Image x:Name="cover" Source="{Binding AlbumArt}" MouseDown="Window_MouseDown" HorizontalAlignment="Left" Height="160" VerticalAlignment="Top" Width="300" Stretch="UniformToFill"/>
+            <Viewbox Canvas.Top="3" Canvas.Left="279" Width="16" Height="16">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <cmd:EventToCommand Command="{Binding WindowCloseCommand}" CommandParameter="{Binding ElementName=ProgramWindow}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <Canvas Background="#202020" Width="16" Height="16">
+                    <Path Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z" Fill="White" Stretch="Fill" />
+                </Canvas>
+            </Viewbox>
+            <Button Style="{DynamicResource MaterialDesignFloatingActionDarkButton}" x:Name="previousButton" Command="{Binding PreviousCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="30" Canvas.Left="249" Canvas.Top="147" Panel.ZIndex="9">
+                <Viewbox Width="20" Height="20">
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" Fill="White" />
+                    </Canvas>
+                </Viewbox>
             </Button>
-            <Button Style="{DynamicResource RoundButtonStyle}" x:Name="previousButton" Command="{Binding PreviousCommand}" Content="&lt;&lt;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="30" Canvas.Left="249" Canvas.Top="147" Panel.ZIndex="9"/>
-            <Button Style="{DynamicResource RoundButtonStyle}" x:Name="nextButton" Command="{Binding NextCommand}" Content="&gt;&gt;" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="30" Canvas.Left="294" Canvas.Top="147" Panel.ZIndex="9"/>
-            <Button Style="{DynamicResource RoundButtonStyle}" x:Name="playButton" Command="{Binding PlayCommand}" Content="{Binding PlayButtonIcon}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="50" Canvas.Left="260" Canvas.Top="109" FontSize="16" Panel.ZIndex="10">
-                <Button.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="10"/>
-                </Button.Effect>
+            <Button Style="{DynamicResource MaterialDesignFloatingActionDarkButton}" x:Name="nextButton" Command="{Binding NextCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="30" Width="30" Canvas.Left="294" Canvas.Top="147" Panel.ZIndex="9">
+                <Viewbox Width="20" Height="20">
+                    <Canvas Width="24" Height="24">
+                        <Path Data="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" Fill="White" />
+                    </Canvas>
+                </Viewbox>
             </Button>
-            <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="170" Canvas.Left="10" Canvas.Top="186"/>
+            <Button Style="{DynamicResource MaterialDesignFloatingActionAccentButton}" x:Name="playButton" Command="{Binding PlayCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="50" Width="50" Canvas.Left="260" Canvas.Top="109" FontSize="16" Panel.ZIndex="10">
+                <Viewbox Width="48" Height="48">
+                    <Canvas Width="24" Height="24">
+                        <Path Data="{Binding PlayButtonIcon}" Fill="White" />
+                    </Canvas>
+                </Viewbox>
+            </Button>
+            <Slider x:Name="seekBar" Value="{Binding PlayingSongPosition}" HorizontalAlignment="Left" Minimum="0" Maximum="{Binding PlayingSongLength}" VerticalAlignment="Top" Width="249" Canvas.Top="152" Panel.ZIndex="6"/>
             <Slider x:Name="volumeBar" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Canvas.Left="202" Canvas.Top="186" Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Maximum="1" LargeChange="0.1"/>
             <Label Visibility="Hidden" x:Name="songTime"  Content="{Binding DisplayText}" HorizontalAlignment="right" VerticalAlignment="Top" Foreground="White" Canvas.Top="312" Canvas.Left="150"/>
 
-            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="2" Background="Transparent" Foreground="white" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="145" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="220">
+            <ListBox Style="{StaticResource MaterialDesignListBox}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" AlternationCount="2" Background="Transparent" Foreground="white" BorderThickness="0" x:Name="playlist" SelectionMode="Multiple" SelectedValuePath="Filename" ItemsSource="{Binding Playlist.Files}" HorizontalAlignment="Left" Height="145" VerticalAlignment="Top" Width="272" Canvas.Left="15" Canvas.Top="220">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="KeyDown">
                         <cmd:EventToCommand Command="{Binding DeleteSelectedCommand}" PassEventArgsToCommand="True" />
@@ -67,63 +90,70 @@
     </Canvas>
 
     <Window.Resources>
-        <Style TargetType="Button" x:Key="RoundButtonStyle">
-            <Setter Property="Background" Value="DarkCyan"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse Fill="{TemplateBinding Background}"/>
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- note you only need bring in these extra resource dictionaries when using non-default styles, so only bring them into your controls where the default style is not what you want -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style TargetType="Button" x:Key="SmallButtonStyle">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <Style TargetType="Button" x:Key="RoundButtonStyle">
+                <Setter Property="Background" Value="DarkCyan"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Width" Value="30"/>
+                <Setter Property="Height" Value="30"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Ellipse Fill="{TemplateBinding Background}"/>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <Style TargetType="Button" x:Key="FlatButtonStyle">
-            <Setter Property="Background" Value="DarkCyan"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="4">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <Style x:Key="ZebraStripe" TargetType="{x:Type ListBoxItem}">
-            <Style.Triggers>
-                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                    <Setter Property="Background" Value="#e7e7e7"></Setter>
-                </Trigger>
-                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                    <Setter Property="Background" Value="#c7c7c7"></Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+            <Style TargetType="Button" x:Key="SmallButtonStyle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Width" Value="30"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="4">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Button" x:Key="FlatButtonStyle">
+                <Setter Property="Background" Value="DarkCyan"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Width" Value="30"/>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border BorderThickness="0" Background="{TemplateBinding Background}" CornerRadius="4">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ZebraStripe" TargetType="{x:Type ListBoxItem}">
+                <Style.Triggers>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                        <Setter Property="Background" Value="#e7e7e7"></Setter>
+                    </Trigger>
+                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                        <Setter Property="Background" Value="#c7c7c7"></Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 </Window>
