@@ -9,6 +9,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media;
 using PlaylistsNET.Models;
 using GalaSoft.MvvmLight.CommandWpf;
+using System.Windows.Interop;
+using HearMe.Helpers;
 
 namespace HearMe
 {
@@ -19,6 +21,9 @@ namespace HearMe
     {
         private PlayerViewModel _viewModel;
 
+        private GlobalKeyboardHook _globalKeyboardHook;
+        private GlobalMediaKeyHook _globalMediaKeyboardHook;
+
         public MainWindow()
         {
             _viewModel = new PlayerViewModel();
@@ -26,6 +31,8 @@ namespace HearMe
             InitializeComponent();
 
             DataContext = _viewModel;
+
+            SetupKeyboardHooks();
 
             Closing += OnWindowClosing;
         }
@@ -43,11 +50,20 @@ namespace HearMe
                 this.DragMove();
         }
 
-        private void PlaySongFromPlaylist(object sender, MouseButtonEventArgs e)
+        public void SetupKeyboardHooks()
         {
-            ListBoxItem clickedSong = (ListBoxItem)sender;
+            _globalKeyboardHook = new GlobalKeyboardHook(new WindowInteropHelper(this).EnsureHandle());
+            _globalKeyboardHook.KeyboardPressed += _viewModel.OnKeyPressed;
 
-            _viewModel.PlayFile(_viewModel.Playlist.Files.IndexOf((M3uPlaylistEntry)clickedSong.Content));
+            // Listen for media keys
+            _globalMediaKeyboardHook = new GlobalMediaKeyHook(new WindowInteropHelper(this).EnsureHandle());
+            _globalMediaKeyboardHook.MediaKeyNextPressed += OnMediaKeyPressed;
+
+        }
+
+        private void OnMediaKeyPressed(object sender, EventArgs e)
+        {
+            _viewModel.MovePlaylistSong(1);
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Media.Imaging;
@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Net;
+using System.Windows.Interop;
 
 namespace HearMe.ViewModels
 {
@@ -28,8 +29,6 @@ namespace HearMe.ViewModels
             // DataUpdateRequest += UpdatePlayingSongDisplayText;
 
             Playlist = new Playlist();
-
-            SetupKeyboardHooks();
 
             NextCommand = new RelayCommand(() => MovePlaylistSong(1));
             PreviousCommand = new RelayCommand(() => MovePlaylistSong(-1));
@@ -386,13 +385,14 @@ namespace HearMe.ViewModels
         }
 
 
-        public void SetupKeyboardHooks()
+
+
+        public void OnMediaKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
         {
-            _globalKeyboardHook = new GlobalKeyboardHook();
-            _globalKeyboardHook.KeyboardPressed += OnKeyPressed;
+
         }
 
-        private void OnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
+        public void OnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
         {
            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {

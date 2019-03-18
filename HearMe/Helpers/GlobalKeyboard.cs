@@ -24,7 +24,7 @@ namespace HearMe
     {
         public event EventHandler<GlobalKeyboardHookEventArgs> KeyboardPressed;
 
-        public GlobalKeyboardHook()
+        public GlobalKeyboardHook(IntPtr hWnd)
         {
             _windowsHookHandle = IntPtr.Zero;
             _user32LibraryHandle = IntPtr.Zero;
