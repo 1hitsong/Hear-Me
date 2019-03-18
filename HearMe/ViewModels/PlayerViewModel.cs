@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Media.Imaging;
@@ -41,6 +41,7 @@ namespace HearMe.ViewModels
             ClearPlaylistCommand = new RelayCommand(() => ClearPlaylist());
             DropCommand = new RelayCommand<DragEventArgs>((e) => AddToPlaylist(e), (e) => true);
             DeleteSelectedCommand = new RelayCommand<KeyEventArgs>((e) => DeleteSelectedFile(e), (e) => true);
+            PlaySongFromPlaylistCommand = new RelayCommand<object>((e) => PlaySongFromPlaylist(e), (e) => true);
 
             _timer = new System.Timers.Timer
             {
@@ -164,13 +165,18 @@ namespace HearMe.ViewModels
         public RelayCommand ClearPlaylistCommand { get; private set; }
         public RelayCommand<DragEventArgs> DropCommand { get; private set; }
         public RelayCommand<KeyEventArgs> DeleteSelectedCommand { get; private set; }
+        public RelayCommand<object> PlaySongFromPlaylistCommand { get; private set; }
 
         AudioPlayer audioPlayer;
-        private GlobalKeyboardHook _globalKeyboardHook;
         private System.Timers.Timer _timer;
 
         public event EventHandler<NavigationEventArgs> NavigationRequest;
         public event EventHandler<EventArgs> DataUpdateRequest;
+
+        private void PlaySongFromPlaylist(object sender)
+        {
+            PlayFile(Playlist.Files.IndexOf((M3uPlaylistEntry)sender));
+        }
 
         private void WindowClose(Window e)
         {
