@@ -182,6 +182,21 @@ namespace HearMe.ViewModels
             e.Close();
         }
 
+        public void OnMediaKeyNextPressed(object sender, EventArgs e)
+        {
+            MovePlaylistSong(1);
+        }
+
+        public void OnMediaKeyPreviousPressed(object sender, EventArgs e)
+        {
+            MovePlaylistSong(-1);
+        }
+
+        public void OnMediaKeyPlayPressed(object sender, EventArgs e)
+        {
+            TogglePlay();
+        }
+
         private void TogglePlay()
         {
             if (audioPlayer == null)

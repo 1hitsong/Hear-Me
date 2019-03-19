@@ -57,13 +57,14 @@ namespace HearMe
 
             // Listen for media keys
             _globalMediaKeyboardHook = new GlobalMediaKeyHook(new WindowInteropHelper(this).EnsureHandle());
-            _globalMediaKeyboardHook.MediaKeyNextPressed += OnMediaKeyPressed;
+            _globalMediaKeyboardHook.MediaKeyNextPressed += _viewModel.OnMediaKeyNextPressed;
+            _globalMediaKeyboardHook.MediaKeyPreviousPressed += _viewModel.OnMediaKeyNextPressed;
+            _globalMediaKeyboardHook.MediaKeyPlayPressed += _viewModel.OnMediaKeyNextPressed;
+
+            _globalMediaKeyboardHook.SetHook();
 
         }
 
-        private void OnMediaKeyPressed(object sender, EventArgs e)
-        {
-            _viewModel.MovePlaylistSong(1);
-        }
+
     }
 }
