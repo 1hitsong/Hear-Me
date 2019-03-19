@@ -1,6 +1,8 @@
 Hear Me
 A simple playlist based MP3 player.
 
+Design Inspired By [Matt Rossi](https://dribbble.com/shots/2313399-Daily-UI-Day-9-Music-Player).
+
 Global Media Key Hook Code From [Dopamine](https://github.com/digimezzo/Dopamine). I never would have figured it out with you!
 
 Libraries Used
