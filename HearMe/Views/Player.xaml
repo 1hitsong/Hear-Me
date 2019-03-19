@@ -36,7 +36,11 @@
                             <cmd:EventToCommand Command="{Binding WindowCloseCommand}" CommandParameter="{Binding ElementName=ProgramWindow}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Path Fill="White" Stretch="Fill" Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z" />
+                    <Path Fill="White" Stretch="Fill" Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z" >
+                        <Path.Effect>
+                            <DropShadowEffect ShadowDepth="2"/>
+                        </Path.Effect>
+                    </Path>
                 </Viewbox>
                 <Viewbox Canvas.Left="10" Canvas.Top="5" Width="16" Height="16" Cursor="Hand" Panel.ZIndex="99">
                     <i:Interaction.Triggers>
@@ -44,7 +48,11 @@
                             <cmd:EventToCommand Command="{Binding ToggleVolumeVisibilityCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Path Fill="White" Stretch="Fill" Data="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z" />
+                    <Path Fill="White" Stretch="Fill" Data="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z">
+                        <Path.Effect>
+                            <DropShadowEffect ShadowDepth="2"/>
+                        </Path.Effect>
+                    </Path>
                 </Viewbox>
                 <Slider Panel.ZIndex="99"
                         x:Name="volumeBar"
@@ -58,7 +66,11 @@
                         Foreground="{StaticResource SecondaryAccentForegroundBrush}"
                         LargeChange="0.1"
                         Maximum="1"
-                        Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" />
+                        Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" >
+                    <Slider.Effect>
+                        <DropShadowEffect ShadowDepth="2"/>
+                    </Slider.Effect>
+                </Slider>
                 <Canvas Name="canvasPlayer">
                     <Image
                         x:Name="cover"
@@ -116,6 +128,9 @@
                         Command="{Binding PlayCommand}"
                         FontSize="16"
                         Style="{DynamicResource MaterialDesignFloatingActionAccentButton}">
+                        <Button.Effect>
+                            <DropShadowEffect ShadowDepth="2"/>
+                        </Button.Effect>
                         <Viewbox Width="36" Height="36">
                             <Canvas Width="24" Height="24">
                                 <Path Data="{Binding PlayButtonIcon}" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
@@ -170,9 +185,9 @@
                                     <StackPanel.InputBindings>
                                         <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding}" Command="{Binding Path=DataContext.PlaySongFromPlaylistCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
                                     </StackPanel.InputBindings>
-                                    <Label Content="{Binding AlbumArtist}" Foreground="White" />
-                                    <Label Foreground="White">-</Label>
-                                    <Label Content="{Binding Title}" Foreground="White" />
+                                    <Label Content="{Binding AlbumArtist}" Foreground="{StaticResource PrimaryHueLightBrush}" />
+                                    <Label Foreground="{StaticResource PrimaryHueLightBrush}">-</Label>
+                                    <Label Content="{Binding Title}" Foreground="{StaticResource PrimaryHueLightBrush}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
