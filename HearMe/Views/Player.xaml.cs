@@ -59,7 +59,7 @@ namespace HearMe
             _globalMediaKeyboardHook = new GlobalMediaKeyHook(new WindowInteropHelper(this).EnsureHandle());
             _globalMediaKeyboardHook.MediaKeyNextPressed += _viewModel.OnMediaKeyNextPressed;
             _globalMediaKeyboardHook.MediaKeyPreviousPressed += _viewModel.OnMediaKeyNextPressed;
-            _globalMediaKeyboardHook.MediaKeyPlayPressed += _viewModel.OnMediaKeyNextPressed;
+            _globalMediaKeyboardHook.MediaKeyPlayPressed += _viewModel.OnMediaKeyPlayPressed;
 
             _globalMediaKeyboardHook.SetHook();
 
