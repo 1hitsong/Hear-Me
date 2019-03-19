@@ -19,239 +19,231 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Canvas
-        Width="300"
-        Height="400"
-        HorizontalAlignment="Left"
-        AllowDrop="True"
-        Background="{StaticResource PrimaryHueLightForegroundBrush}">
+            Width="300"
+            Height="400"
+            HorizontalAlignment="Left"
+            AllowDrop="True">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Drop">
                 <cmd:EventToCommand Command="{Binding DropCommand}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <Canvas Name="WindowTop" Height="15">
-            <Rectangle
-                Width="300"
-                Height="15"
-                Fill="{StaticResource SecondaryAccentBrush}"
-                MouseDown="Window_MouseDown" />
-            <Slider
-                x:Name="volumeBar"
-                Canvas.Left="5"
-                Canvas.Top="-2"
-                Width="110"
-                Height="20"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Foreground="{StaticResource SecondaryAccentForegroundBrush}"
-                LargeChange="0.1"
-                Maximum="1"
-                Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" />
-            <Viewbox
-                Canvas.Left="287"
-                Canvas.Top="2"
-                Width="10"
-                Height="10"
-                Cursor="Hand">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseDown">
-                        <cmd:EventToCommand Command="{Binding WindowCloseCommand}" CommandParameter="{Binding ElementName=ProgramWindow}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <Canvas
-                    Width="16"
-                    Height="16"
-                    Cursor="Hand">
-                    <Path
-                        Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z"
-                        Fill="White"
-                        Stretch="Fill" />
+        <Border MouseDown="Window_MouseDown" Background="{StaticResource PrimaryHueLightForegroundBrush}" CornerRadius="10" BorderThickness="0">
+            <Canvas Width="300" Height="400">
+                <Viewbox Canvas.Left="275" Canvas.Top="5" Width="16" Height="16" Cursor="Hand" Panel.ZIndex="99">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <cmd:EventToCommand Command="{Binding WindowCloseCommand}" CommandParameter="{Binding ElementName=ProgramWindow}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Path Fill="White" Stretch="Fill" Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z" />
+                </Viewbox>
+                <Viewbox Canvas.Left="10" Canvas.Top="5" Width="16" Height="16" Cursor="Hand" Panel.ZIndex="99">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <cmd:EventToCommand Command="{Binding ToggleVolumeVisibilityCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Path Fill="White" Stretch="Fill" Data="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z" />
+                </Viewbox>
+                <Slider Panel.ZIndex="99"
+                        x:Name="volumeBar"
+                        Visibility="{Binding VolumeVisibility}"
+                        Canvas.Left="35"
+                        Canvas.Top="3"
+                        Width="100"
+                        Height="20"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Foreground="{StaticResource SecondaryAccentForegroundBrush}"
+                        LargeChange="0.1"
+                        Maximum="1"
+                        Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" />
+                <Canvas Name="canvasPlayer">
+                    <Image
+                        x:Name="cover"
+                        Width="300"
+                        Height="160"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Source="{Binding AlbumArt}"
+                        Stretch="UniformToFill" />
+                    <Button
+                        x:Name="previousButton"
+                        Canvas.Left="249"
+                        Canvas.Top="147"
+                        Width="30"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Panel.ZIndex="9"
+                        Command="{Binding PreviousCommand}"
+                        Style="{DynamicResource MaterialDesignFloatingActionDarkButton}"
+                        Visibility="Hidden">
+                        <Viewbox Width="20" Height="20">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button>
+                    <Button
+                        x:Name="nextButton"
+                        Canvas.Left="294"
+                        Canvas.Top="147"
+                        Width="30"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Panel.ZIndex="9"
+                        Command="{Binding NextCommand}"
+                        Style="{DynamicResource MaterialDesignFloatingActionDarkButton}"
+                        Visibility="Hidden">
+                        <Viewbox Width="20" Height="20">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button>
+                    <Button
+                        x:Name="playButton"
+                        Canvas.Left="263"
+                        Canvas.Top="83"
+                        Width="64"
+                        Height="64"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Panel.ZIndex="10"
+                        Command="{Binding PlayCommand}"
+                        FontSize="16"
+                        Style="{DynamicResource MaterialDesignFloatingActionAccentButton}">
+                        <Viewbox Width="36" Height="36">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="{Binding PlayButtonIcon}" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button>
+                    <Slider
+                        x:Name="seekBar"
+                        Canvas.Top="152"
+                        Width="300"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Panel.ZIndex="6"
+                        Foreground="{StaticResource PrimaryHueLightBrush}"
+                        Maximum="{Binding PlayingSongLength}"
+                        Minimum="0"
+                        Value="{Binding PlayingSongPosition}" />
+                    <Label
+                        x:Name="songTime"
+                        Canvas.Left="150"
+                        Canvas.Top="312"
+                        HorizontalAlignment="right"
+                        VerticalAlignment="Top"
+                        Content="{Binding DisplayText}"
+                        Foreground="White"
+                        Visibility="Hidden" />
+
+                    <ListBox
+                        x:Name="playlist"
+                        Canvas.Left="15"
+                        Canvas.Top="182"
+                        Width="272"
+                        Height="163"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        AlternationCount="2"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Foreground="white"
+                        ItemsSource="{Binding Playlist.Files}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        SelectedValuePath="Filename"
+                        Style="{StaticResource MaterialDesignListBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="KeyDown">
+                                <cmd:EventToCommand Command="{Binding DeleteSelectedCommand}" PassEventArgsToCommand="True" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
+                                    <StackPanel.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding}" Command="{Binding Path=DataContext.PlaySongFromPlaylistCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+                                    </StackPanel.InputBindings>
+                                    <Label Content="{Binding AlbumArtist}" Foreground="White" />
+                                    <Label Foreground="White">-</Label>
+                                    <Label Content="{Binding Title}" Foreground="White" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button
+                        x:Name="openPlaylist"
+                        Canvas.Left="15"
+                        Canvas.Top="359"
+                        Height="25"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding OpenPlaylistCommand}"
+                        Content="Open"
+                        Style="{DynamicResource SmallButtonStyle}" />
+                    <Button
+                        x:Name="clearPlaylist"
+                        Canvas.Left="245"
+                        Canvas.Top="359"
+                        Height="25"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding ClearPlaylistCommand}"
+                        Content="Clear"
+                        Style="{DynamicResource SmallButtonStyle}" />
+                    <Button
+                        x:Name="savePlaylist"
+                        Canvas.Left="65"
+                        Canvas.Top="359"
+                        Height="25"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding SavePlaylistCommand}"
+                        Content="Save"
+                        Style="{DynamicResource SmallButtonStyle}" />
+
+                    <Label
+                        x:Name="songArtist"
+                        Canvas.Left="5"
+                        Canvas.Top="115"
+                        Width="253"
+                        Height="34"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Panel.ZIndex="6"
+                        Content="{Binding PlayingSongArtist}"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Foreground="White" />
+                    <Label
+                        x:Name="songTitle"
+                        Canvas.Left="5"
+                        Canvas.Top="135"
+                        Width="253"
+                        Height="24"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Panel.ZIndex="6"
+                        Content="{Binding PlayingSongTitle}"
+                        FontSize="11"
+                        Foreground="White" />
+                    <Rectangle
+                        Canvas.Left="-13"
+                        Canvas.Top="115"
+                        Width="313"
+                        Height="45"
+                        Panel.ZIndex="5"
+                        Fill="#000000"
+                        Opacity=".8" />
                 </Canvas>
-            </Viewbox>
-        </Canvas>
-        <Canvas Name="canvasPlayer" Canvas.Top="15">
-            <Image
-                x:Name="cover"
-                Width="300"
-                Height="160"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Source="{Binding AlbumArt}"
-                Stretch="UniformToFill" />
-            <Button
-                x:Name="previousButton"
-                Canvas.Left="249"
-                Canvas.Top="147"
-                Width="30"
-                Height="30"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="9"
-                Command="{Binding PreviousCommand}"
-                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}"
-                Visibility="Hidden">
-                <Viewbox Width="20" Height="20">
-                    <Canvas Width="24" Height="24">
-                        <Path Data="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
-                    </Canvas>
-                </Viewbox>
-            </Button>
-            <Button
-                x:Name="nextButton"
-                Canvas.Left="294"
-                Canvas.Top="147"
-                Width="30"
-                Height="30"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="9"
-                Command="{Binding NextCommand}"
-                Style="{DynamicResource MaterialDesignFloatingActionDarkButton}"
-                Visibility="Hidden">
-                <Viewbox Width="20" Height="20">
-                    <Canvas Width="24" Height="24">
-                        <Path Data="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
-                    </Canvas>
-                </Viewbox>
-            </Button>
-            <Button
-                x:Name="playButton"
-                Canvas.Left="263"
-                Canvas.Top="135"
-                Width="64"
-                Height="64"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="10"
-                Command="{Binding PlayCommand}"
-                FontSize="16"
-                Style="{DynamicResource MaterialDesignFloatingActionAccentButton}">
-                <Viewbox Width="36" Height="36">
-                    <Canvas Width="24" Height="24">
-                        <Path Data="{Binding PlayButtonIcon}" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
-                    </Canvas>
-                </Viewbox>
-            </Button>
-            <Slider
-                x:Name="seekBar"
-                Canvas.Top="152"
-                Width="263"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="6"
-                Foreground="{StaticResource PrimaryHueLightBrush}"
-                Maximum="{Binding PlayingSongLength}"
-                Minimum="0"
-                Value="{Binding PlayingSongPosition}" />
-            <Label
-                x:Name="songTime"
-                Canvas.Left="150"
-                Canvas.Top="312"
-                HorizontalAlignment="right"
-                VerticalAlignment="Top"
-                Content="{Binding DisplayText}"
-                Foreground="White"
-                Visibility="Hidden" />
-
-            <ListBox
-                x:Name="playlist"
-                Canvas.Left="15"
-                Canvas.Top="182"
-                Width="272"
-                Height="163"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                AlternationCount="2"
-                Background="Transparent"
-                BorderThickness="0"
-                Foreground="white"
-                ItemsSource="{Binding Playlist.Files}"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                SelectedValuePath="Filename"
-                Style="{StaticResource MaterialDesignListBox}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="KeyDown">
-                        <cmd:EventToCommand Command="{Binding DeleteSelectedCommand}" PassEventArgsToCommand="True" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                            <StackPanel.InputBindings>
-                                <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding}" Command="{Binding Path=DataContext.PlaySongFromPlaylistCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
-                            </StackPanel.InputBindings>
-                            <Label Content="{Binding AlbumArtist}" Foreground="White" />
-                            <Label Foreground="White">-</Label>
-                            <Label Content="{Binding Title}" Foreground="White" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Button
-                x:Name="openPlaylist"
-                Canvas.Left="15"
-                Canvas.Top="359"
-                Height="25"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{Binding OpenPlaylistCommand}"
-                Content="Open"
-                Style="{DynamicResource SmallButtonStyle}" />
-            <Button
-                x:Name="clearPlaylist"
-                Canvas.Left="245"
-                Canvas.Top="359"
-                Height="25"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{Binding ClearPlaylistCommand}"
-                Content="Clear"
-                Style="{DynamicResource SmallButtonStyle}" />
-            <Button
-                x:Name="savePlaylist"
-                Canvas.Left="65"
-                Canvas.Top="359"
-                Height="25"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Command="{Binding SavePlaylistCommand}"
-                Content="Save"
-                Style="{DynamicResource SmallButtonStyle}" />
-
-            <Label
-                x:Name="songArtist"
-                Canvas.Left="5"
-                Canvas.Top="115"
-                Width="253"
-                Height="34"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="6"
-                Content="{Binding PlayingSongArtist}"
-                FontSize="14"
-                FontWeight="Bold"
-                Foreground="White" />
-            <Label
-                x:Name="songTitle"
-                Canvas.Left="5"
-                Canvas.Top="135"
-                Width="253"
-                Height="24"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Panel.ZIndex="6"
-                Content="{Binding PlayingSongTitle}"
-                FontSize="11"
-                Foreground="White" />
-            <Rectangle
-                Canvas.Left="-13"
-                Canvas.Top="115"
-                Width="313"
-                Height="45"
-                Panel.ZIndex="5"
-                Fill="#000000"
-                Opacity=".8" />
-        </Canvas>
+            </Canvas>
+        </Border>
     </Canvas>
 
     <Window.Resources>

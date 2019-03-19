@@ -30,6 +30,7 @@ namespace HearMe.ViewModels
 
             Playlist = new Playlist();
 
+            ToggleVolumeVisibilityCommand = new RelayCommand(() => ToggleVolumeVisibility());
             NextCommand = new RelayCommand(() => MovePlaylistSong(1));
             PreviousCommand = new RelayCommand(() => MovePlaylistSong(-1));
             StopCommand = new RelayCommand(() => Stop());
@@ -41,6 +42,8 @@ namespace HearMe.ViewModels
             DropCommand = new RelayCommand<DragEventArgs>((e) => AddToPlaylist(e), (e) => true);
             DeleteSelectedCommand = new RelayCommand<KeyEventArgs>((e) => DeleteSelectedFile(e), (e) => true);
             PlaySongFromPlaylistCommand = new RelayCommand<object>((e) => PlaySongFromPlaylist(e), (e) => true);
+
+            VolumeVisibility = Visibility.Hidden;
 
             _timer = new System.Timers.Timer
             {
@@ -151,9 +154,21 @@ namespace HearMe.ViewModels
             }
         }
 
+        private Visibility _volumeVisibility;
+        public Visibility VolumeVisibility
+        {
+            get { return _volumeVisibility; }
+            set
+            {
+                _volumeVisibility = value;
+                RaisePropertyChanged("VolumeVisibility");
+            }
+        }
+
         private int PlayingSongPlaylistIndex { get; set; }
         public Playlist Playlist { get; set; }
 
+        public RelayCommand ToggleVolumeVisibilityCommand { get; private set; }
         public RelayCommand NextCommand { get; private set; }
         public RelayCommand<Window> WindowCloseCommand { get; private set; }
         public RelayCommand PreviousCommand { get; private set; }
@@ -171,6 +186,11 @@ namespace HearMe.ViewModels
 
         public event EventHandler<NavigationEventArgs> NavigationRequest;
         public event EventHandler<EventArgs> DataUpdateRequest;
+
+        public void ToggleVolumeVisibility()
+        {
+            VolumeVisibility = (VolumeVisibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+        }
 
         private void PlaySongFromPlaylist(object sender)
         {
@@ -269,7 +289,7 @@ namespace HearMe.ViewModels
             audioPlayer = new AudioPlayer(@fileLocation);
             audioPlayer.Play();
 
-            PlayButtonIcon = "M18,18H6V6H18V18Z";
+            PlayButtonIcon = "M14,19H18V5H14M6,19H10V5H6V19Z";
 
             audioPlayer.OutputDevice.Stopped += PlaybackDevicePlaybackStopped;
 
@@ -344,7 +364,7 @@ namespace HearMe.ViewModels
 
             audioPlayer.OutputDevice.Volume = Volume;
             audioPlayer.Play();
-            PlayButtonIcon = "M18,18H6V6H18V18Z"; 
+            PlayButtonIcon = "M14,19H18V5H14M6,19H10V5H6V19Z"; 
             _timer.Start();
         }
 
