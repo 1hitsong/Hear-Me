@@ -28,7 +28,7 @@ namespace HearMe
                 Title = tags == null ? "Unknown Track" : tags.Tag.Title.Replace("\0", "");
                 Album = tags == null ? "Unknown Album" : tags.Tag.Album.Replace("\0", "");
                 Artist = tags == null ? "Unknown Artist" : tags.Tag.Performers.FirstOrDefault().Replace("\0", "");
-                Length = TimeSpan.FromSeconds(60);
+                Length = tags.Properties.Duration;
             }
         }
 

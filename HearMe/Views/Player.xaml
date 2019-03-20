@@ -19,46 +19,74 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Canvas
-            Width="300"
-            Height="400"
-            HorizontalAlignment="Left"
-            AllowDrop="True">
+        Width="300"
+        Height="400"
+        HorizontalAlignment="Left"
+        AllowDrop="True">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="Drop">
                 <cmd:EventToCommand Command="{Binding DropCommand}" PassEventArgsToCommand="True" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <Border MouseDown="Window_MouseDown" Background="{StaticResource PrimaryHueLightForegroundBrush}" CornerRadius="10" BorderThickness="0">
+        <Border
+            Background="{StaticResource PrimaryHueLightForegroundBrush}"
+            BorderThickness="0"
+            CornerRadius="10"
+            MouseDown="Window_MouseDown">
             <Canvas Width="300" Height="400">
-                <Viewbox Canvas.Left="275" Canvas.Top="5" Width="16" Height="16" Cursor="Hand" Panel.ZIndex="99">
+                <Viewbox
+                    Canvas.Left="275"
+                    Canvas.Top="5"
+                    Width="16"
+                    Height="16"
+                    Panel.ZIndex="99"
+                    Cursor="Hand">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown">
                             <cmd:EventToCommand Command="{Binding WindowCloseCommand}" CommandParameter="{Binding ElementName=ProgramWindow}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Path Fill="White" Stretch="Fill" Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z" >
+                    <Path
+                        Data="M19,3H16.3H7.7H5A2,2 0 0,0 3,5V7.7V16.4V19A2,2 0 0,0 5,21H7.7H16.4H19A2,2 0 0,0 21,19V16.3V7.7V5A2,2 0 0,0 19,3M15.6,17L12,13.4L8.4,17L7,15.6L10.6,12L7,8.4L8.4,7L12,10.6L15.6,7L17,8.4L13.4,12L17,15.6L15.6,17Z"
+                        Fill="White"
+                        Stretch="Fill">
                         <Path.Effect>
-                            <DropShadowEffect ShadowDepth="2"/>
+                            <DropShadowEffect ShadowDepth="2" />
                         </Path.Effect>
                     </Path>
                 </Viewbox>
-                <Viewbox Canvas.Left="10" Canvas.Top="5" Width="16" Height="16" Cursor="Hand" Panel.ZIndex="99">
+                <Viewbox
+                    Canvas.Left="10"
+                    Canvas.Top="5"
+                    Width="16"
+                    Height="16"
+                    Panel.ZIndex="99"
+                    Cursor="Hand">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDown">
                             <cmd:EventToCommand Command="{Binding ToggleVolumeVisibilityCommand}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Path Fill="White" Stretch="Fill" Data="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z">
+                    <Path
+                        Data="M5,9V15H9L14,20V4L9,9M18.5,12C18.5,10.23 17.5,8.71 16,7.97V16C17.5,15.29 18.5,13.76 18.5,12Z"
+                        Fill="White"
+                        Stretch="Fill">
                         <Path.Effect>
-                            <DropShadowEffect ShadowDepth="2"/>
+                            <DropShadowEffect ShadowDepth="2" />
                         </Path.Effect>
                     </Path>
                 </Viewbox>
-                <Slider Panel.ZIndex="99"
+                <Canvas
+                    Canvas.Left="35"
+                    Canvas.Top="3"
+                    Width="105"
+                    Height="20"
+                    Panel.ZIndex="99"
+                    Background="{StaticResource PrimaryHueLightForegroundBrush}"
+                    Visibility="{Binding VolumeVisibility}">
+                    <Slider
                         x:Name="volumeBar"
-                        Visibility="{Binding VolumeVisibility}"
-                        Canvas.Left="35"
-                        Canvas.Top="3"
+                        Canvas.Left="3"
                         Width="100"
                         Height="20"
                         HorizontalAlignment="Left"
@@ -66,20 +94,20 @@
                         Foreground="{StaticResource SecondaryAccentForegroundBrush}"
                         LargeChange="0.1"
                         Maximum="1"
-                        Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" >
-                    <Slider.Effect>
-                        <DropShadowEffect ShadowDepth="2"/>
-                    </Slider.Effect>
-                </Slider>
+                        Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}">
+                        <Slider.Effect>
+                            <DropShadowEffect ShadowDepth="2" />
+                        </Slider.Effect>
+                    </Slider>
+                </Canvas>
                 <Canvas Name="canvasPlayer">
-                    <Image
-                        x:Name="cover"
-                        Width="300"
-                        Height="160"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Source="{Binding AlbumArt}"
-                        Stretch="UniformToFill" />
+                    <Canvas ClipToBounds="True" Name="AlbumImage" Height="160" Width="300">
+                        <Rectangle RadiusX="10" RadiusY="10" Width="300" Height="170">
+                            <Rectangle.Fill>
+                                <ImageBrush x:Name="myImage" Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Top" ImageSource="{Binding AlbumArt}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Canvas>
                     <Button
                         x:Name="previousButton"
                         Canvas.Left="249"
@@ -129,7 +157,7 @@
                         FontSize="16"
                         Style="{DynamicResource MaterialDesignFloatingActionAccentButton}">
                         <Button.Effect>
-                            <DropShadowEffect ShadowDepth="2"/>
+                            <DropShadowEffect ShadowDepth="2" />
                         </Button.Effect>
                         <Viewbox Width="36" Height="36">
                             <Canvas Width="24" Height="24">
@@ -163,7 +191,7 @@
                         Canvas.Left="15"
                         Canvas.Top="182"
                         Width="272"
-                        Height="163"
+                        Height="177"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         AlternationCount="2"
@@ -183,7 +211,10 @@
                             <DataTemplate>
                                 <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
                                     <StackPanel.InputBindings>
-                                        <MouseBinding MouseAction="LeftDoubleClick" CommandParameter="{Binding}" Command="{Binding Path=DataContext.PlaySongFromPlaylistCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+                                        <MouseBinding
+                                            Command="{Binding Path=DataContext.PlaySongFromPlaylistCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                            CommandParameter="{Binding}"
+                                            MouseAction="LeftDoubleClick" />
                                     </StackPanel.InputBindings>
                                     <Label Content="{Binding AlbumArtist}" Foreground="{StaticResource PrimaryHueLightBrush}" />
                                     <Label Foreground="{StaticResource PrimaryHueLightBrush}">-</Label>
@@ -195,7 +226,7 @@
                     <Button
                         x:Name="openPlaylist"
                         Canvas.Left="15"
-                        Canvas.Top="359"
+                        Canvas.Top="364"
                         Height="25"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -205,7 +236,7 @@
                     <Button
                         x:Name="clearPlaylist"
                         Canvas.Left="245"
-                        Canvas.Top="359"
+                        Canvas.Top="364"
                         Height="25"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -215,7 +246,7 @@
                     <Button
                         x:Name="savePlaylist"
                         Canvas.Left="65"
-                        Canvas.Top="359"
+                        Canvas.Top="364"
                         Height="25"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
