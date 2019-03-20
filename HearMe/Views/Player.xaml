@@ -107,6 +107,14 @@
                                 <ImageBrush x:Name="myImage" Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Top" ImageSource="{Binding AlbumArt}" />
                             </Rectangle.Fill>
                         </Rectangle>
+                        <Rectangle Canvas.Left="5" RadiusX="5" RadiusY="5" Opacity=".5" Height="5" Width="290">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="White" Offset="0"/>
+                                    <GradientStop Color="Transparent" Offset=".7"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
                     </Canvas>
                     <Button
                         x:Name="previousButton"
@@ -254,6 +262,16 @@
                         Content="Save"
                         Style="{DynamicResource SmallButtonStyle}" />
 
+                    <Canvas Canvas.Left="-13" Canvas.Top="115" Width="313" Height="45" ClipToBounds="True">
+                        <Rectangle Canvas.Top="-115" Canvas.Left="13" RadiusX="10" RadiusY="10" Width="300" Height="170">
+                            <Rectangle.Effect>
+                                <BlurEffect Radius="15"/>
+                            </Rectangle.Effect>
+                            <Rectangle.Fill>
+                                <ImageBrush Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Top" ImageSource="{Binding AlbumArt}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </Canvas>
                     <Label
                         x:Name="songArtist"
                         Canvas.Left="5"
@@ -266,7 +284,11 @@
                         Content="{Binding PlayingSongArtist}"
                         FontSize="14"
                         FontWeight="Bold"
-                        Foreground="White" />
+                        Foreground="White">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="2" Opacity="0.5"/>
+                        </Label.Effect>
+                    </Label>
                     <Label
                         x:Name="songTitle"
                         Canvas.Left="5"
@@ -278,15 +300,12 @@
                         Panel.ZIndex="6"
                         Content="{Binding PlayingSongTitle}"
                         FontSize="11"
-                        Foreground="White" />
-                    <Rectangle
-                        Canvas.Left="-13"
-                        Canvas.Top="115"
-                        Width="313"
-                        Height="45"
-                        Panel.ZIndex="5"
-                        Fill="#000000"
-                        Opacity=".8" />
+                        Foreground="White">
+                        <Label.Effect>
+                            <DropShadowEffect ShadowDepth="2" Opacity="0.5"/>
+                        </Label.Effect>
+                    </Label>
+                    <Rectangle Canvas.Left="-13" Canvas.Top="115" Width="313" Height="45" Panel.ZIndex="5" Fill="#000000" Opacity=".5" />
                 </Canvas>
             </Canvas>
         </Border>
