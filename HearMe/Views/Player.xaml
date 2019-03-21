@@ -217,17 +217,27 @@
                         </i:Interaction.Triggers>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal">
-                                    <StackPanel.InputBindings>
+                                <Grid HorizontalAlignment="Stretch" Width="260">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="55" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.InputBindings>
                                         <MouseBinding
                                             Command="{Binding Path=DataContext.PlaySongFromPlaylistCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                             CommandParameter="{Binding}"
                                             MouseAction="LeftDoubleClick" />
-                                    </StackPanel.InputBindings>
-                                    <Label Content="{Binding AlbumArtist}" Foreground="{StaticResource PrimaryHueLightBrush}" />
-                                    <Label Foreground="{StaticResource PrimaryHueLightBrush}">-</Label>
-                                    <Label Content="{Binding Title}" Foreground="{StaticResource PrimaryHueLightBrush}" />
-                                </StackPanel>
+                                    </Grid.InputBindings>
+                                    <TextBlock VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" Foreground="{StaticResource PrimaryHueLightBrush}">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} - {1}">
+                                                <Binding Path="AlbumArtist" />
+                                                <Binding Path="Title" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <Label Content="{Binding Duration}" Grid.Column="1" ContentStringFormat="{}{0:mm}:{0:ss}" Foreground="{StaticResource PrimaryHueLightBrush}" HorizontalAlignment="Right" />
+                                </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
