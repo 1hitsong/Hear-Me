@@ -14,8 +14,8 @@ namespace HearMe.Models
     class Playlist : GalaSoft.MvvmLight.ObservableObject
     {
 
-        private ObservableCollection<M3uPlaylistEntry> _files;
-        public ObservableCollection<M3uPlaylistEntry> Files
+        private ObservableCollection<PlaylistEntry> _files;
+        public ObservableCollection<PlaylistEntry> Files
         {
             get { return _files; }
             set
@@ -27,19 +27,12 @@ namespace HearMe.Models
 
         public Playlist()
         {
-            Files = new ObservableCollection<M3uPlaylistEntry>();
+            Files = new ObservableCollection<PlaylistEntry>();
         }
 
         public void Add(Song songToAdd)
         {
-            Files.Add(new M3uPlaylistEntry()
-            {
-                Album = songToAdd.Album,
-                AlbumArtist = songToAdd.Artist,
-                Duration = songToAdd.Length,
-                Path = songToAdd.FileName,
-                Title = songToAdd.Title
-            });
+            Files.Add(new PlaylistEntry(songToAdd) { PlaylistIndex = Files.Count() + 1 });
         }
 
         public void Add(string[] filesToAdd)
@@ -66,7 +59,7 @@ namespace HearMe.Models
         {
             for (int i = selectedSongs.Count - 1; i >= 0; i--)
             {
-                Files.RemoveAt(Files.IndexOf((M3uPlaylistEntry)selectedSongs[i]));
+                Files.RemoveAt(Files.IndexOf((PlaylistEntry)selectedSongs[i]));
             }
         }
 
@@ -82,7 +75,17 @@ namespace HearMe.Models
                 IsExtended = true
             };
 
-            PlaylistFile.PlaylistEntries = Files.ToList();
+            foreach (PlaylistEntry file in Files)
+            {
+                PlaylistFile.PlaylistEntries.Add(new M3uPlaylistEntry
+                {
+                    Duration = file.SongData.Length,
+                    Title = file.SongData.Title,
+                    Album = file.SongData.Album,
+                    AlbumArtist = file.SongData.Artist,
+                    Path = file.SongData.FileName
+                });
+            }
 
             M3uContent content = new M3uContent();
 
@@ -106,6 +109,9 @@ namespace HearMe.Models
                     fs.Write(data, 0, data.Length);
                 }
             }
+
+            content = null;
+            PlaylistFile = null;
         }
 
         public void Open()
@@ -133,14 +139,18 @@ namespace HearMe.Models
                     // Remove final null char at end of last entry
                     playlist.PlaylistEntries.Last().Path = playlist.PlaylistEntries.Last().Path.Substring(0, playlist.PlaylistEntries.Last().Path.Length - 1);
 
-                    Files = new ObservableCollection<M3uPlaylistEntry>(playlist.PlaylistEntries);
+                    Files = new ObservableCollection<PlaylistEntry>();
+                    foreach (M3uPlaylistEntry file in playlist.PlaylistEntries)
+                    {
+                        Files.Add(new PlaylistEntry(new Song(file.Path)));
+                    }
                 }
 
                 playlist = null;
             }
         }
 
-        public M3uPlaylistEntry ElementAt(int index)
+        public PlaylistEntry ElementAt(int index)
         {
             return index < Files.Count() ? Files.ElementAt(index) : null;
         }

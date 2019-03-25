@@ -77,18 +77,21 @@
                     </Path>
                 </Viewbox>
                 <Canvas
-                    Canvas.Left="35"
-                    Canvas.Top="3"
-                    Width="105"
-                    Height="20"
+                    Canvas.Left="7"
+                    Canvas.Top="30"
+                    Width="20"
+                    Height="115"
                     Panel.ZIndex="99"
                     Background="{StaticResource PrimaryHueLightForegroundBrush}"
                     Visibility="{Binding VolumeVisibility}">
+                    <Canvas.Effect>
+                        <DropShadowEffect ShadowDepth="2" Opacity="0.75"/>
+                    </Canvas.Effect>
                     <Slider
+                        Orientation="Vertical"
                         x:Name="volumeBar"
-                        Canvas.Left="3"
-                        Width="100"
-                        Height="20"
+                        Width="20"
+                        Height="110"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Foreground="{StaticResource SecondaryAccentForegroundBrush}"
@@ -219,6 +222,7 @@
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Stretch" Width="260">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25" />
                                         <ColumnDefinition />
                                         <ColumnDefinition Width="55" />
                                     </Grid.ColumnDefinitions>
@@ -228,15 +232,16 @@
                                             CommandParameter="{Binding}"
                                             MouseAction="LeftDoubleClick" />
                                     </Grid.InputBindings>
-                                    <TextBlock VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" Foreground="{StaticResource PrimaryHueLightBrush}">
+                                    <Label Content="{Binding PlaylistIndex}" Grid.Column="0" Foreground="{StaticResource PrimaryHueLightBrush}" HorizontalAlignment="Left" />
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" Style="{DynamicResource SongStyle}">
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} - {1}">
-                                                <Binding Path="AlbumArtist" />
-                                                <Binding Path="Title" />
+                                                <Binding Path="SongData.Artist" />
+                                                <Binding Path="SongData.Title" />
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
-                                    <Label Content="{Binding Duration}" Grid.Column="1" ContentStringFormat="{}{0:mm}:{0:ss}" Foreground="{StaticResource PrimaryHueLightBrush}" HorizontalAlignment="Right" />
+                                    <Label Content="{Binding SongData.Length}" Grid.Column="2" ContentStringFormat="{}{0:mm}:{0:ss}" Style="{DynamicResource TimeStyle}" HorizontalAlignment="Right" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -323,10 +328,27 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <!--  note you only need bring in these extra resource dictionaries when using non-default styles, so only bring them into your controls where the default style is not what you want  -->
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Slider.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SongStyle" TargetType="{x:Type TextBlock}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsPlaying}" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=IsPlaying}" Value="False">
+                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentForegroundBrush}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="TimeStyle" TargetType="{x:Type Label}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsPlaying}" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Path=IsPlaying}" Value="False">
+                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentForegroundBrush}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
             <Style x:Key="RoundButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="DarkCyan" />

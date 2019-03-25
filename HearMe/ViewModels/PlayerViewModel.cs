@@ -194,7 +194,7 @@ namespace HearMe.ViewModels
 
         private void PlaySongFromPlaylist(object sender)
         {
-            PlayFile(Playlist.Files.IndexOf((M3uPlaylistEntry)sender));
+            PlayFile(Playlist.Files.IndexOf((PlaylistEntry)sender));
         }
 
         private void WindowClose(Window e)
@@ -263,14 +263,14 @@ namespace HearMe.ViewModels
 
         public void PlayFile(int playlistIndex)
         {
-            M3uPlaylistEntry selectedSong = Playlist.ElementAt(playlistIndex);
+            PlaylistEntry selectedSong = Playlist.ElementAt(playlistIndex);
 
             if (selectedSong == null)
             {
                 return;
             }
 
-            string fileLocation = selectedSong.Path;
+            string fileLocation = selectedSong.SongData.FileName;
 
             if (!System.IO.File.Exists(fileLocation))
             {
@@ -281,6 +281,8 @@ namespace HearMe.ViewModels
             {
                 Dispose();
             }
+
+            Playlist.Files.Where(w => w.IsPlaying == true).ToList().ForEach(s => s.IsPlaying = false);
 
             PlayingSongPlaylistIndex = playlistIndex;
 
@@ -296,6 +298,8 @@ namespace HearMe.ViewModels
             PlayingSongLength = TotalTime.TotalSeconds;
 
             audioPlayer.OutputDevice.Volume = Volume;
+
+            selectedSong.IsPlaying = true;
 
             _timer.Start();
             
@@ -390,11 +394,11 @@ namespace HearMe.ViewModels
             audioPlayer.AudioFile.SetPosition(seekPosition);
         }
 
-        public void UpdateSongInformationDisplay(M3uPlaylistEntry playingSong)
+        public void UpdateSongInformationDisplay(PlaylistEntry playingSong)
         {
-            AlbumArt = Song.GetAlbumArt(playingSong.Path);
-            PlayingSongArtist = playingSong.AlbumArtist;
-            PlayingSongTitle = playingSong.Title;
+            AlbumArt = Song.GetAlbumArt(playingSong.SongData.FileName);
+            PlayingSongArtist = playingSong.SongData.Artist;
+            PlayingSongTitle = playingSong.SongData.Title;
         }
 
         public void Dispose()
