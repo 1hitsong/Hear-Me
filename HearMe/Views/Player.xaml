@@ -185,7 +185,7 @@
                         Panel.ZIndex="10"
                         Command="{Binding PlayCommand}"
                         FontSize="16"
-                        Style="{DynamicResource MaterialDesignFloatingActionAccentButton}">
+                        Style="{DynamicResource RoundButtonStyle}">
                         <Button.Effect>
                             <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.8" RenderingBias="Quality" />
                         </Button.Effect>
@@ -391,7 +391,7 @@
             <Style x:Key="SongStyle" TargetType="{x:Type TextBlock}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=IsPlaying}" Value="True">
-                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource AccentGreen}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=IsPlaying}" Value="False">
                         <Setter Property="Foreground" Value="{DynamicResource CoolBlue}" />
@@ -463,7 +463,7 @@
             <Style x:Key="TimeStyle" TargetType="{x:Type Label}">
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=IsPlaying}" Value="True">
-                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource AccentGreen}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=IsPlaying}" Value="False">
                         <Setter Property="Foreground" Value="{DynamicResource LightGrey}" />
@@ -472,16 +472,22 @@
             </Style>
 
             <Style x:Key="RoundButtonStyle" TargetType="Button">
-                <Setter Property="Background" Value="DarkCyan" />
+                <Setter Property="Background" Value="{DynamicResource AccentGreen}" />
                 <Setter Property="Foreground" Value="White" />
+                <Setter Property="Cursor" Value="Hand" />
                 <Setter Property="Width" Value="30" />
                 <Setter Property="Height" Value="30" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
                             <Grid>
-                                <Ellipse Fill="{TemplateBinding Background}" />
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <Ellipse Fill="{TemplateBinding Background}" Margin="2" Panel.ZIndex="2">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Color="White" Direction="90" Opacity="0.5" ShadowDepth="2"/>
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Fill="{TemplateBinding Background}" Panel.ZIndex="1" />
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="3" />
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
@@ -525,28 +531,8 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <Style x:Key="ZebraStripe" TargetType="{x:Type ListBoxItem}">
-                <Style.Triggers>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                        <Setter Property="Background" Value="#e7e7e7" />
-                    </Trigger>
-                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                        <Setter Property="Background" Value="#c7c7c7" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
 
             <!-- Fill Brushes -->
-
-            <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FFF" Offset="0.0"/>
-                        <GradientStop Color="#CCC" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
             <LinearGradientBrush x:Key="HorizontalNormalBrush" StartPoint="0,0" EndPoint="1,0">
                 <GradientBrush.GradientStops>
                     <GradientStopCollection>
@@ -555,47 +541,10 @@
                     </GradientStopCollection>
                 </GradientBrush.GradientStops>
             </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FFF" Offset="0.0"/>
-                        <GradientStop Color="#EEE" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="HorizontalLightBrush" StartPoint="0,0" EndPoint="1,0">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FFF" Offset="0.0"/>
-                        <GradientStop Color="#EEE" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="DarkBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FFF" Offset="0.0"/>
-                        <GradientStop Color="#AAA" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#BBB" Offset="0.0"/>
-                        <GradientStop Color="#EEE" Offset="0.1"/>
-                        <GradientStop Color="#EEE" Offset="0.9"/>
-                        <GradientStop Color="#FFF" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
+            
             <SolidColorBrush x:Key="LightGrey" Color="#DCE1DD" />
             <SolidColorBrush x:Key="CoolBlue" Color="#99D2F4" />
+            <SolidColorBrush x:Key="AccentGreen" Color="#a5c12b" />
 
         </ResourceDictionary>
     </Window.Resources>
