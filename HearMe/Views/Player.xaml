@@ -93,7 +93,7 @@
                         Height="110"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        Foreground="{StaticResource SecondaryAccentForegroundBrush}"
+                        Foreground="{StaticResource PrimaryHueLightBrush}"
                         LargeChange="0.1"
                         Maximum="1"
                         Orientation="Vertical"
@@ -187,11 +187,15 @@
                         FontSize="16"
                         Style="{DynamicResource MaterialDesignFloatingActionAccentButton}">
                         <Button.Effect>
-                            <DropShadowEffect ShadowDepth="2" />
+                            <DropShadowEffect ShadowDepth="2" BlurRadius="10" Opacity="0.8" RenderingBias="Quality" />
                         </Button.Effect>
                         <Viewbox Width="36" Height="36">
                             <Canvas Width="24" Height="24">
-                                <Path Data="{Binding PlayButtonIcon}" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
+                                <Path Data="{Binding PlayButtonIcon}" Fill="White" >
+                                    <Path.Effect>
+                                        <DropShadowEffect ShadowDepth="2" Opacity="0.5"/>
+                                    </Path.Effect>
+                                </Path>
                             </Canvas>
                         </Viewbox>
                     </Button>
@@ -224,7 +228,6 @@
                         Height="177"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        AlternationCount="2"
                         Background="Transparent"
                         BorderThickness="0"
                         Foreground="white"
@@ -242,9 +245,9 @@
                             <DataTemplate>
                                 <Grid Width="250" HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="25" />
+                                        <ColumnDefinition Width="20" />
                                         <ColumnDefinition />
-                                        <ColumnDefinition Width="55" />
+                                        <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.InputBindings>
                                         <MouseBinding
@@ -255,11 +258,12 @@
                                     <Label
                                         Grid.Column="0"
                                         HorizontalAlignment="Left"
+                                        ContentStringFormat="{}{0}."
                                         Content="{Binding PlaylistIndex}"
-                                        Foreground="{StaticResource PrimaryHueLightBrush}" />
+                                        Foreground="{DynamicResource LightGrey}" />
                                     <TextBlock
                                         Grid.Column="1"
-                                        MaxWidth="220"
+                                        MaxWidth="240"
                                         VerticalAlignment="Center"
                                         Style="{DynamicResource SongStyle}"
                                         TextTrimming="CharacterEllipsis">
@@ -390,7 +394,7 @@
                         <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=IsPlaying}" Value="False">
-                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentForegroundBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource CoolBlue}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -417,7 +421,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
-                            <Border Background="{StaticResource SecondaryAccentBrush}" BorderThickness="0" />
+                            <Border Background="{DynamicResource LightGrey}" BorderThickness="0" />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -428,7 +432,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0.00001*"/>
                     </Grid.RowDefinitions>
-                    <Border Background="#F0F0F0" />
+                    <Border Background="#202020" />
                     <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
                         <Track.DecreaseRepeatButton>
                             <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
@@ -462,7 +466,7 @@
                         <Setter Property="Foreground" Value="{StaticResource SecondaryAccentBrush}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Path=IsPlaying}" Value="False">
-                        <Setter Property="Foreground" Value="{StaticResource SecondaryAccentForegroundBrush}" />
+                        <Setter Property="Foreground" Value="{DynamicResource LightGrey}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -590,62 +594,9 @@
                 </GradientBrush.GradientStops>
             </LinearGradientBrush>
 
-            <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+            <SolidColorBrush x:Key="LightGrey" Color="#DCE1DD" />
+            <SolidColorBrush x:Key="CoolBlue" Color="#99D2F4" />
 
-            <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEE" />
-
-            <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFF" />
-
-            <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#DDD" />
-
-            <!-- Border Brushes -->
-
-            <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#CCC" Offset="0.0"/>
-                        <GradientStop Color="#444" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="HorizontalNormalBorderBrush" StartPoint="0,0" EndPoint="1,0">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#CCC" Offset="0.0"/>
-                        <GradientStop Color="#444" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#777" Offset="0.0"/>
-                        <GradientStop Color="#000" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
-                <GradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#444" Offset="0.0"/>
-                        <GradientStop Color="#888" Offset="1.0"/>
-                    </GradientStopCollection>
-                </GradientBrush.GradientStops>
-            </LinearGradientBrush>
-
-            <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
-
-            <SolidColorBrush x:Key="SolidBorderBrush" Color="#888" />
-
-            <SolidColorBrush x:Key="LightBorderBrush" Color="#AAA" />
-
-            <!-- Miscellaneous Brushes -->
-            <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
-
-            <SolidColorBrush x:Key="LightColorBrush" Color="#DDD" />
         </ResourceDictionary>
     </Window.Resources>
 </Window>
