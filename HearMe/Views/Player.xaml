@@ -85,10 +85,9 @@
                     Background="{StaticResource PrimaryHueLightForegroundBrush}"
                     Visibility="{Binding VolumeVisibility}">
                     <Canvas.Effect>
-                        <DropShadowEffect ShadowDepth="2" Opacity="0.75"/>
+                        <DropShadowEffect Opacity="0.75" ShadowDepth="2" />
                     </Canvas.Effect>
                     <Slider
-                        Orientation="Vertical"
                         x:Name="volumeBar"
                         Width="20"
                         Height="110"
@@ -97,6 +96,7 @@
                         Foreground="{StaticResource SecondaryAccentForegroundBrush}"
                         LargeChange="0.1"
                         Maximum="1"
+                        Orientation="Vertical"
                         Value="{Binding Volume, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}">
                         <Slider.Effect>
                             <DropShadowEffect ShadowDepth="2" />
@@ -104,17 +104,36 @@
                     </Slider>
                 </Canvas>
                 <Canvas Name="canvasPlayer">
-                    <Canvas ClipToBounds="True" Name="AlbumImage" Height="160" Width="300">
-                        <Rectangle RadiusX="10" RadiusY="10" Width="300" Height="170">
+                    <Canvas
+                        Name="AlbumImage"
+                        Width="300"
+                        Height="160"
+                        ClipToBounds="True">
+                        <Rectangle
+                            Width="300"
+                            Height="170"
+                            RadiusX="10"
+                            RadiusY="10">
                             <Rectangle.Fill>
-                                <ImageBrush x:Name="myImage" Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Top" ImageSource="{Binding AlbumArt}" />
+                                <ImageBrush
+                                    x:Name="myImage"
+                                    AlignmentX="Center"
+                                    AlignmentY="Top"
+                                    ImageSource="{Binding AlbumArt}"
+                                    Stretch="UniformToFill" />
                             </Rectangle.Fill>
                         </Rectangle>
-                        <Rectangle Canvas.Left="5" RadiusX="5" RadiusY="5" Opacity=".5" Height="5" Width="290">
+                        <Rectangle
+                            Canvas.Left="5"
+                            Width="290"
+                            Height="5"
+                            Opacity=".5"
+                            RadiusX="5"
+                            RadiusY="5">
                             <Rectangle.Fill>
-                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                    <GradientStop Color="White" Offset="0"/>
-                                    <GradientStop Color="Transparent" Offset=".7"/>
+                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset=".7" Color="Transparent" />
                                 </LinearGradientBrush>
                             </Rectangle.Fill>
                         </Rectangle>
@@ -211,6 +230,7 @@
                         Foreground="white"
                         ItemsSource="{Binding Playlist.Files}"
                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
                         SelectedValuePath="Filename"
                         Style="{StaticResource MaterialDesignListBox}">
                         <i:Interaction.Triggers>
@@ -220,7 +240,7 @@
                         </i:Interaction.Triggers>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid HorizontalAlignment="Stretch" Width="260">
+                                <Grid Width="250" HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="25" />
                                         <ColumnDefinition />
@@ -232,8 +252,17 @@
                                             CommandParameter="{Binding}"
                                             MouseAction="LeftDoubleClick" />
                                     </Grid.InputBindings>
-                                    <Label Content="{Binding PlaylistIndex}" Grid.Column="0" Foreground="{StaticResource PrimaryHueLightBrush}" HorizontalAlignment="Left" />
-                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" MaxWidth="220" TextTrimming="CharacterEllipsis" Style="{DynamicResource SongStyle}">
+                                    <Label
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Left"
+                                        Content="{Binding PlaylistIndex}"
+                                        Foreground="{StaticResource PrimaryHueLightBrush}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        MaxWidth="220"
+                                        VerticalAlignment="Center"
+                                        Style="{DynamicResource SongStyle}"
+                                        TextTrimming="CharacterEllipsis">
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} - {1}">
                                                 <Binding Path="SongData.Artist" />
@@ -241,7 +270,12 @@
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
-                                    <Label Content="{Binding SongData.Length}" Grid.Column="2" ContentStringFormat="{}{0:mm}:{0:ss}" Style="{DynamicResource TimeStyle}" HorizontalAlignment="Right" />
+                                    <Label
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Content="{Binding SongData.Length}"
+                                        ContentStringFormat="{}{0:mm}:{0:ss}"
+                                        Style="{DynamicResource TimeStyle}" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -277,13 +311,28 @@
                         Content="Save"
                         Style="{DynamicResource SmallButtonStyle}" />
 
-                    <Canvas Canvas.Left="-13" Canvas.Top="115" Width="313" Height="45" ClipToBounds="True">
-                        <Rectangle Canvas.Top="-115" Canvas.Left="13" RadiusX="10" RadiusY="10" Width="300" Height="170">
+                    <Canvas
+                        Canvas.Left="-13"
+                        Canvas.Top="115"
+                        Width="313"
+                        Height="45"
+                        ClipToBounds="True">
+                        <Rectangle
+                            Canvas.Left="13"
+                            Canvas.Top="-115"
+                            Width="300"
+                            Height="170"
+                            RadiusX="10"
+                            RadiusY="10">
                             <Rectangle.Effect>
-                                <BlurEffect Radius="15"/>
+                                <BlurEffect Radius="15" />
                             </Rectangle.Effect>
                             <Rectangle.Fill>
-                                <ImageBrush Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Top" ImageSource="{Binding AlbumArt}" />
+                                <ImageBrush
+                                    AlignmentX="Center"
+                                    AlignmentY="Top"
+                                    ImageSource="{Binding AlbumArt}"
+                                    Stretch="UniformToFill" />
                             </Rectangle.Fill>
                         </Rectangle>
                     </Canvas>
@@ -301,7 +350,7 @@
                         FontWeight="Bold"
                         Foreground="White">
                         <Label.Effect>
-                            <DropShadowEffect ShadowDepth="2" Opacity="0.5"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="2" />
                         </Label.Effect>
                     </Label>
                     <Label
@@ -317,10 +366,17 @@
                         FontSize="11"
                         Foreground="White">
                         <Label.Effect>
-                            <DropShadowEffect ShadowDepth="2" Opacity="0.5"/>
+                            <DropShadowEffect Opacity="0.5" ShadowDepth="2" />
                         </Label.Effect>
                     </Label>
-                    <Rectangle Canvas.Left="-13" Canvas.Top="115" Width="313" Height="45" Panel.ZIndex="5" Fill="#000000" Opacity=".5" />
+                    <Rectangle
+                        Canvas.Left="-13"
+                        Canvas.Top="115"
+                        Width="313"
+                        Height="45"
+                        Panel.ZIndex="5"
+                        Fill="#000000"
+                        Opacity=".5" />
                 </Canvas>
             </Canvas>
         </Border>
@@ -338,6 +394,67 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="Focusable" Value="false"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RepeatButton}">
+                            <Border Background="#202020" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Setter Property="IsTabStop" Value="false"/>
+                <Setter Property="Focusable" Value="false"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Border Background="{StaticResource SecondaryAccentBrush}" BorderThickness="0" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.00001*"/>
+                    </Grid.RowDefinitions>
+                    <Border Background="#F0F0F0" />
+                    <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                        <Track.DecreaseRepeatButton>
+                            <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
+                        </Track.DecreaseRepeatButton>
+                        <Track.Thumb>
+                            <Thumb Style="{StaticResource ScrollBarThumb}" Margin="0" Background="{DynamicResource HorizontalNormalBrush}" />
+                        </Track.Thumb>
+                        <Track.IncreaseRepeatButton>
+                            <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
+                        </Track.IncreaseRepeatButton>
+                    </Track>
+                </Grid>
+            </ControlTemplate>
+            
+            <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Style.Triggers>
+                    <Trigger Property="Orientation" Value="Vertical">
+                        <Setter Property="Width" Value="5"/>
+                        <Setter Property="Height" Value="Auto" />
+                        <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
 
             <Style x:Key="TimeStyle" TargetType="{x:Type Label}">
                 <Style.Triggers>
@@ -414,6 +531,121 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+
+            <!-- Fill Brushes -->
+
+            <LinearGradientBrush x:Key="NormalBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#FFF" Offset="0.0"/>
+                        <GradientStop Color="#CCC" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="HorizontalNormalBrush" StartPoint="0,0" EndPoint="1,0">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#FFF" Offset="0.0"/>
+                        <GradientStop Color="#CCC" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="LightBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#FFF" Offset="0.0"/>
+                        <GradientStop Color="#EEE" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="HorizontalLightBrush" StartPoint="0,0" EndPoint="1,0">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#FFF" Offset="0.0"/>
+                        <GradientStop Color="#EEE" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="DarkBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#FFF" Offset="0.0"/>
+                        <GradientStop Color="#AAA" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="PressedBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#BBB" Offset="0.0"/>
+                        <GradientStop Color="#EEE" Offset="0.1"/>
+                        <GradientStop Color="#EEE" Offset="0.9"/>
+                        <GradientStop Color="#FFF" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#888" />
+
+            <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#EEE" />
+
+            <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFF" />
+
+            <SolidColorBrush x:Key="SelectedBackgroundBrush" Color="#DDD" />
+
+            <!-- Border Brushes -->
+
+            <LinearGradientBrush x:Key="NormalBorderBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#CCC" Offset="0.0"/>
+                        <GradientStop Color="#444" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="HorizontalNormalBorderBrush" StartPoint="0,0" EndPoint="1,0">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#CCC" Offset="0.0"/>
+                        <GradientStop Color="#444" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="DefaultedBorderBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#777" Offset="0.0"/>
+                        <GradientStop Color="#000" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientBrush.GradientStops>
+                    <GradientStopCollection>
+                        <GradientStop Color="#444" Offset="0.0"/>
+                        <GradientStop Color="#888" Offset="1.0"/>
+                    </GradientStopCollection>
+                </GradientBrush.GradientStops>
+            </LinearGradientBrush>
+
+            <SolidColorBrush x:Key="DisabledBorderBrush" Color="#AAA" />
+
+            <SolidColorBrush x:Key="SolidBorderBrush" Color="#888" />
+
+            <SolidColorBrush x:Key="LightBorderBrush" Color="#AAA" />
+
+            <!-- Miscellaneous Brushes -->
+            <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
+
+            <SolidColorBrush x:Key="LightColorBrush" Color="#DDD" />
         </ResourceDictionary>
     </Window.Resources>
 </Window>
