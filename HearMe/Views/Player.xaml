@@ -243,9 +243,9 @@
                         </i:Interaction.Triggers>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="250" HorizontalAlignment="Stretch">
+                                <Grid Width="260" HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="25" />
                                         <ColumnDefinition />
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
@@ -257,13 +257,13 @@
                                     </Grid.InputBindings>
                                     <Label
                                         Grid.Column="0"
-                                        HorizontalAlignment="Left"
+                                        HorizontalAlignment="Right"
                                         ContentStringFormat="{}{0}."
                                         Content="{Binding PlaylistIndex}"
                                         Foreground="{DynamicResource LightGrey}" />
                                     <TextBlock
                                         Grid.Column="1"
-                                        MaxWidth="240"
+                                        MaxWidth="250"
                                         VerticalAlignment="Center"
                                         Style="{DynamicResource SongStyle}"
                                         TextTrimming="CharacterEllipsis">
@@ -397,6 +397,12 @@
                         <Setter Property="Foreground" Value="{DynamicResource CoolBlue}" />
                     </DataTrigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style x:Key="{x:Type ListBoxItem}" TargetType="{x:Type ListBoxItem}">
+                <Setter Property="Padding" Value="0,2" />
+                <Setter Property="BorderBrush" Value="#111" />
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
             </Style>
 
             <Style x:Key="ScrollBarPageButton" TargetType="{x:Type RepeatButton}">
