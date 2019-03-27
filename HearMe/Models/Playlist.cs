@@ -57,9 +57,26 @@ namespace HearMe.Models
 
         public void Remove(System.Collections.IList selectedSongs)
         {
+            if (selectedSongs.Count < 1)
+            {
+                return;
+            }
+
+            int firstIndexRemoved = Files.IndexOf((PlaylistEntry)selectedSongs[0]);
+
             for (int i = selectedSongs.Count - 1; i >= 0; i--)
             {
                 Files.RemoveAt(Files.IndexOf((PlaylistEntry)selectedSongs[i]));
+            }
+
+            RecalculatePlaylistIndex(firstIndexRemoved);
+        }
+
+        public void RecalculatePlaylistIndex(int firstIndexRemoved)
+        {
+            for (int i = firstIndexRemoved; i < Files.Count; i++)
+            {
+                Files[i].PlaylistIndex = i + 1;
             }
         }
 
