@@ -57,6 +57,5 @@ namespace HearMe.Models
 
             return new DirectSoundOut();
         }
-
     }
 }
