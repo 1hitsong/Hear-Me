@@ -20,6 +20,7 @@ namespace HearMe
     }
 
     //Based on https://gist.github.com/Stasonix
+    #pragma warning disable SA1402 // FileMayOnlyContainASingleType
     class GlobalKeyboardHook : IDisposable
     {
         public event EventHandler<GlobalKeyboardHookEventArgs> KeyboardPressed;
