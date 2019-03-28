@@ -37,8 +37,6 @@ namespace HearMe
                 throw new Win32Exception(errorCode, $"Failed to load library 'User32.dll'. Error {errorCode}: {new Win32Exception(Marshal.GetLastWin32Error()).Message}.");
             }
 
-
-
             _windowsHookHandle = SetWindowsHookEx(WH_KEYBOARD_LL, _hookProc, _user32LibraryHandle, 0);
             if (_windowsHookHandle == IntPtr.Zero)
             {
@@ -163,7 +161,6 @@ namespace HearMe
         }
 
         public const int WH_KEYBOARD_LL = 13;
-        //const int HC_ACTION = 0;
 
         public enum KeyboardState
         {
@@ -178,7 +175,6 @@ namespace HearMe
         public const int VkMediaNext = 0xb0;
         public const int VkBackspace = 0x2e;
         public const int VkDelete = 0x08;
-        //public const int LlkhfAltdown = (KfAltdown >> 8);
 
         public IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -200,6 +196,5 @@ namespace HearMe
 
             return fEatKeyStroke ? (IntPtr)1 : CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
-    }
-    
+    }   
 }
