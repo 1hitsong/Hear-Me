@@ -1,6 +1,8 @@
 ## Hear Me
 A simple playlist based MP3 player.
 
+[![CodeFactor](https://www.codefactor.io/repository/github/tgpo/hear-me/badge/master)](https://www.codefactor.io/repository/github/tgpo/hear-me/overview/master)
+
 ![Hear Me MP3 Player](https://raw.githubusercontent.com/tgpo/Hear-Me/master/HearMe.PNG)
 
 Design By [Matt Rossi](https://dribbble.com/shots/2313399-Daily-UI-Day-9-Music-Player). So fresh and so clean.
