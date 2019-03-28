@@ -62,9 +62,6 @@ namespace HearMe
             _globalMediaKeyboardHook.MediaKeyPlayPressed += _viewModel.OnMediaKeyPlayPressed;
 
             _globalMediaKeyboardHook.SetHook();
-
         }
-
-
     }
 }

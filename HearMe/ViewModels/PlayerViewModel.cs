@@ -302,7 +302,6 @@ namespace HearMe.ViewModels
             selectedSong.IsPlaying = true;
 
             _timer.Start();
-            
         }
 
         public void UpdateBoundData(object sender, System.Timers.ElapsedEventArgs e)
@@ -423,19 +422,10 @@ namespace HearMe.ViewModels
             audioPlayer = null;
         }
 
-
-
-
-        public void OnMediaKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
-        {
-
-        }
-
         public void OnKeyPressed(object sender, GlobalKeyboardHookEventArgs e)
         {
            if (e.KeyboardState == GlobalKeyboardHook.KeyboardState.KeyDown)
             {
-
                 int[] validKeys = new int[] {GlobalKeyboardHook.VkMediaNext, GlobalKeyboardHook.VkMediaPrevious, GlobalKeyboardHook.VkMediaPlay};
 
                 if (!validKeys.Contains(e.KeyboardData.VirtualCode))
@@ -451,17 +441,7 @@ namespace HearMe.ViewModels
 
                 if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaPlay)
                 {
-                    if (audioPlayer == null)
-                        return;
-
-                    if (audioPlayer.IsPlaying())
-                    {
-                        Stop();
-                    }
-                    else
-                    {
-                        Play();
-                    }
+                    TogglePlay();
                 }
 
                 e.Handled = true;
