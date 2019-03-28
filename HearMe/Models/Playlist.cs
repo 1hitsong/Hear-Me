@@ -13,7 +13,6 @@ namespace HearMe.Models
 {
     class Playlist : GalaSoft.MvvmLight.ObservableObject
     {
-
         private ObservableCollection<PlaylistEntry> _files;
         public ObservableCollection<PlaylistEntry> Files
         {
@@ -85,7 +84,7 @@ namespace HearMe.Models
             Files.Clear();
         }
 
-        public void Save()
+        public M3uPlaylist ConvertFileListToM3UPlaylist()
         {
             M3uPlaylist PlaylistFile = new M3uPlaylist
             {
@@ -104,13 +103,24 @@ namespace HearMe.Models
                 });
             }
 
-            M3uContent content = new M3uContent();
+            return PlaylistFile;
+        }
 
-            string toSave = content.ToText(PlaylistFile);
+        public string GetPlaylistData()
+        {
+            return new M3uContent().ToText(ConvertFileListToM3UPlaylist());
+        }
 
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Playlist files (*.m3u)|*.m3u|All files (*.*)|*.*";
-            saveFileDialog1.Title = "Save Playlist";
+        public void Save()
+        {
+            string toSave = GetPlaylistData();
+
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = "Playlist files (*.m3u)|*.m3u|All files (*.*)|*.*",
+                Title = "Save Playlist"
+            };
+            
             saveFileDialog1.ShowDialog();
 
             if (saveFileDialog1.FileName != "")
@@ -127,8 +137,7 @@ namespace HearMe.Models
                 }
             }
 
-            content = null;
-            PlaylistFile = null;
+            toSave = null;
         }
 
         public void Open()
