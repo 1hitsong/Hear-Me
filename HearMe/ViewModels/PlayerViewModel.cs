@@ -244,9 +244,7 @@ namespace HearMe.ViewModels
         public void AddToPlaylist(DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
                 Playlist.Add((string[])e.Data.GetData(DataFormats.FileDrop));
-            }
         }
 
         void ClearPlaylist()
@@ -266,21 +264,15 @@ namespace HearMe.ViewModels
             PlaylistEntry selectedSong = Playlist.ElementAt(playlistIndex);
 
             if (selectedSong == null)
-            {
                 return;
-            }
 
             string fileLocation = selectedSong.SongData.FileName;
 
             if (!System.IO.File.Exists(fileLocation))
-            {
                 return;
-            }
 
             if (audioPlayer != null)
-            {
                 Dispose();
-            }
 
             Playlist.Files.Where(w => w.IsPlaying == true).ToList().ForEach(s => s.IsPlaying = false);
 
@@ -324,15 +316,11 @@ namespace HearMe.ViewModels
         {
             // Don't allow movement beyond last playlist song
             if (PlayingSongPlaylistIndex + e.Direction == Playlist.Files.Count)
-            {
                 return;
-            }
 
             // Don't allow movement below 0
             if (PlayingSongPlaylistIndex + e.Direction < 0)
-            {
                 return;
-            }
 
             PlayingSongPlaylistIndex += e.Direction;
 
@@ -347,9 +335,7 @@ namespace HearMe.ViewModels
         void PlaybackDevicePlaybackStopped(object sender, StoppedEventArgs e)
         {
             if (audioPlayer.OutputDevice.PlaybackState == CSCore.SoundOut.PlaybackState.Playing)
-            {
                 return;
-            }
 
             if (audioPlayer.IsPlaying())
             {
@@ -361,9 +347,7 @@ namespace HearMe.ViewModels
         public void Play()
         {
             if (audioPlayer == null)
-            {
                 return;
-            }
 
             audioPlayer.OutputDevice.Volume = Volume;
             audioPlayer.Play();
@@ -403,9 +387,7 @@ namespace HearMe.ViewModels
         public void Dispose()
         {
             if (audioPlayer == null)
-            {
                 return;
-            }
 
             if (audioPlayer.OutputDevice != null)
             {
@@ -429,9 +411,7 @@ namespace HearMe.ViewModels
                 int[] validKeys = new int[] {GlobalKeyboardHook.VkMediaNext, GlobalKeyboardHook.VkMediaPrevious, GlobalKeyboardHook.VkMediaPlay};
 
                 if (!validKeys.Contains(e.KeyboardData.VirtualCode))
-                {
                     return;
-                }
 
                 if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaNext)
                     MovePlaylistSong(1);
@@ -440,9 +420,7 @@ namespace HearMe.ViewModels
                     MovePlaylistSong(-1);
 
                 if (e.KeyboardData.VirtualCode == GlobalKeyboardHook.VkMediaPlay)
-                {
                     TogglePlay();
-                }
 
                 e.Handled = true;
             }

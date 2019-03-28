@@ -18,9 +18,7 @@ namespace HearMe
         public Song(string file)
         {
             if (Path.GetExtension(file) != ".mp3")
-            {
                 return;
-            }
 
             using (TagFile tags = TagFile.Create(@file))
             {
@@ -32,9 +30,9 @@ namespace HearMe
             }
         }
 
-        public static BitmapImage GetAlbumArt(string fileName)
+        private static bool TryGetAlbumArtFromFile(string fileName, out BitmapImage albumArt)
         {
-            BitmapImage bitmap = new BitmapImage();
+            albumArt = new BitmapImage();
 
             using (TagFile tags = TagFile.Create(fileName))
             {
@@ -42,17 +40,25 @@ namespace HearMe
                 {
                     using (MemoryStream ms = new MemoryStream(tags.Tag.Pictures.FirstOrDefault().Data.Data))
                     {
-                        bitmap.BeginInit();
-                        bitmap.StreamSource = ms;
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.EndInit();
-                        bitmap.Freeze();
+                        albumArt.BeginInit();
+                        albumArt.StreamSource = ms;
+                        albumArt.CacheOption = BitmapCacheOption.OnLoad;
+                        albumArt.EndInit();
+                        albumArt.Freeze();
+
+                        return true;
                     }
                 }
-                else
-                {
-                    bitmap = GetFolderAlbumImage(fileName);
-                }
+            }
+
+            return false;
+        }
+
+        public static BitmapImage GetAlbumArt(string fileName)
+        {
+            if (!TryGetAlbumArtFromFile(fileName, out BitmapImage bitmap))
+            {
+                bitmap = GetFolderAlbumImage(fileName);
             }
 
             return bitmap;

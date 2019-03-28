@@ -106,10 +106,7 @@ namespace HearMe.Models
             return PlaylistFile;
         }
 
-        public string GetPlaylistData()
-        {
-            return new M3uContent().ToText(ConvertFileListToM3UPlaylist());
-        }
+        public string GetPlaylistData() => new M3uContent().ToText(ConvertFileListToM3UPlaylist());
 
         public void Save()
         {
@@ -176,9 +173,6 @@ namespace HearMe.Models
             }
         }
 
-        public PlaylistEntry ElementAt(int index)
-        {
-            return index < Files.Count() ? Files.ElementAt(index) : null;
-        }
+        public PlaylistEntry ElementAt(int index) => index < Files.Count() ? Files.ElementAt(index) : null;
     }
 }

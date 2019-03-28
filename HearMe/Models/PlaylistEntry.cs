@@ -37,7 +37,6 @@ namespace HearMe.Models
 
         public Song SongData { get; set; }
 
-
         public PlaylistEntry(Song newSong)
         {
             IsPlaying = false;
