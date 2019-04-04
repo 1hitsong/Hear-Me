@@ -111,7 +111,7 @@
                         ClipToBounds="True">
                         <Rectangle
                             Width="300"
-                            Height="170"
+                            Height="300"
                             RadiusX="10"
                             RadiusY="10">
                             <Rectangle.Fill>
@@ -120,7 +120,11 @@
                                     AlignmentX="Center"
                                     AlignmentY="Top"
                                     ImageSource="{Binding AlbumArt}"
-                                    Stretch="UniformToFill" />
+                                    Stretch="UniformToFill">
+                                    <ImageBrush.Transform>
+                                        <TranslateTransform Y="{Binding AlbumArtTop}"/>
+                                    </ImageBrush.Transform>
+                                </ImageBrush>
                             </Rectangle.Fill>
                         </Rectangle>
                         <Rectangle
@@ -336,7 +340,11 @@
                                     AlignmentX="Center"
                                     AlignmentY="Top"
                                     ImageSource="{Binding AlbumArt}"
-                                    Stretch="UniformToFill" />
+                                    Stretch="UniformToFill">
+                                    <ImageBrush.Transform>
+                                        <TranslateTransform Y="{Binding AlbumArtTop}"/>
+                                    </ImageBrush.Transform>
+                                </ImageBrush>
                             </Rectangle.Fill>
                         </Rectangle>
                     </Canvas>

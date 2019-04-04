@@ -25,6 +25,9 @@ namespace HearMe.ViewModels
 
             DataUpdateRequest += UpdatePlayingSongPosition;
 
+            AlbumArtTop = 0;
+            AlbumArtMovingUp = true;
+
             // Disabled for now as it is not displayed
             // DataUpdateRequest += UpdatePlayingSongDisplayText;
 
@@ -47,7 +50,7 @@ namespace HearMe.ViewModels
 
             _timer = new System.Timers.Timer
             {
-                Interval = 300
+                Interval = 200
             };
 
             _timer.Elapsed += UpdateBoundData;
@@ -94,6 +97,17 @@ namespace HearMe.ViewModels
             {
                 _albumArt = value;
                 RaisePropertyChanged("AlbumArt");
+            }
+        }
+
+        private int _albumArtTop;
+        public int AlbumArtTop
+        {
+            get { return _albumArtTop; }
+            set
+            {
+                _albumArtTop = value;
+                RaisePropertyChanged("AlbumArtTop");
             }
         }
 
@@ -183,6 +197,7 @@ namespace HearMe.ViewModels
 
         AudioPlayer audioPlayer;
         private System.Timers.Timer _timer;
+        private bool AlbumArtMovingUp;
 
         public event EventHandler<NavigationEventArgs> NavigationRequest;
         public event EventHandler<EventArgs> DataUpdateRequest;
@@ -298,6 +313,14 @@ namespace HearMe.ViewModels
 
         public void UpdateBoundData(object sender, System.Timers.ElapsedEventArgs e)
         {
+            if (AlbumArtTop < -130)
+                AlbumArtMovingUp = false;
+
+            if (AlbumArtTop > 0)
+                AlbumArtMovingUp = true;
+
+            AlbumArtTop += AlbumArtMovingUp ? -1 : 1;
+            
             DataUpdateRequest.Invoke(this, null);
         }
 
