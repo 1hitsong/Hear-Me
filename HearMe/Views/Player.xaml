@@ -152,11 +152,11 @@
                         VerticalAlignment="Top"
                         Panel.ZIndex="9"
                         Command="{Binding PreviousCommand}"
-                        Style="{DynamicResource MaterialDesignFloatingActionDarkButton}"
+                        Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
                         Visibility="Hidden">
                         <Viewbox Width="20" Height="20">
                             <Canvas Width="24" Height="24">
-                                <Path Data="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
+                                <Path Data="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" Fill="#000000" />
                             </Canvas>
                         </Viewbox>
                     </Button>
@@ -170,11 +170,11 @@
                         VerticalAlignment="Top"
                         Panel.ZIndex="9"
                         Command="{Binding NextCommand}"
-                        Style="{DynamicResource MaterialDesignFloatingActionDarkButton}"
+                        Style="{StaticResource MaterialDesignFloatingActionDarkButton}"
                         Visibility="Hidden">
                         <Viewbox Width="20" Height="20">
                             <Canvas Width="24" Height="24">
-                                <Path Data="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" Fill="{StaticResource SecondaryAccentForegroundBrush}" />
+                                <Path Data="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" Fill="#000000" />
                             </Canvas>
                         </Viewbox>
                     </Button>
